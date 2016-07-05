@@ -1,20 +1,28 @@
 define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
-	var Matrix = function(width, height) {
-		var width		= width || 0;
-		var height	= height || 0;
-
-		this.init(width, height);
+	var Matrix = function(config) {
+		this.init(config);
 	};
 
-	Matrix.prototype.init = function(width, height) {
+	/**
+	 * A class for organizing and accessing a 2-dimensional array of nodes.
+	 *
+	 * @param		{integer}		width
+	 * @param		{integer}		height
+	 * @param		{object}		origin	X- and Y-coordinates
+	 * @param		{object}		parent	Parent matrix
+	 */
+	Matrix.prototype.init = function(config) {
+		this.width	= config.width || 0;
+		this.height	= config.height || 0;
+		this.origin	= config.origin || {x: 0, y: 0};
 		this.nodes	= [];
-		this.width	= width;
-		this.height	= height;
+		this.children	= [];
+		this.parent	= config.parent;
 
-		for(var y = 0; y < height; y++) {
+		for(var y = 0; y < this.height; y++) {
 			var column = [];
 
-			for(var x = 0; x < width; x++) {
+			for(var x = 0; x < this.width; x++) {
 				column.push(false);
 			}
 
@@ -133,22 +141,11 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 	 * @returns	{array}
 	 */
 	Matrix.prototype.getRectanglePoints = function(origin, terminus, types) {
-		/*
-		var errorMsg = 'Bounding points supplied to getRectanglePoints exceed matrix size.';
-
-		if( origin.x >= this.width || terminus.x >= this.width ) {
-			throw new RangeError(errorMsg);
-		}
-		if( origin.y >= this.height || terminus.y >= this.height ) {
-			throw new RangeError(errorMsg);
-		}
-		*/
-
 		var types	 = types || 'all';
 		var points = [];
 
-		var width		= terminus.x - origin.x;
-		var height	= terminus.y - origin.y;
+		var width		= terminus.x - origin.x + 1;
+		var height	= terminus.y - origin.y + 1;
 
 		var start	= {x: false, y: false};
 		var end	= {x: false, y: false};
@@ -198,7 +195,7 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 	/**
 	 * Gets the points that make up a circular region.
 	 *
-	 * @param		{integer}		origin	Contains x- and y-coordinates and marks center of circle
+	 * @param		{integer}		origin	Contains X- and Y-coordinates and marks center of circle
 	 * @param		{integer}		radius	Radius of circle
 	 * @param		{string}		types	Which point types to return: edge, interior or all
 	 * @returns	{array}
@@ -366,7 +363,7 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 	 * @param		{integer}		posX		Amount to expand in positive x direction
 	 * @param		{integer}		posY		Amount to expand in positive y direction
 	 */
-	Matrix.prototype.expand = function(negX, negY, posX, posY) {
+	Matrix.prototype.rebound = function(negX, negY, posX, posY) {
 		var negX = Math.abs(negX) || 0;
 		var negY = Math.abs(negY) || 0;
 		var posX = posX || 0;
@@ -391,12 +388,53 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 		this.nodes	= tempMatrix.nodes;
 		this.width	= newWidth;
 		this.height	= newHeight;
+		this.origin	= {x: this.origin.x - negX, y: this.origin.y - negY};
+	}
+
+	/**
+	 * Checks a collection of points for any that lie outside matrix's dimensions and rebounds the matrix if need be
+	 *
+	 * @param		{array}		points	Array of objects containing X- and Y-coordinates
+	 */
+	Matrix.prototype.checkBounds = function(points) {
+		var minX = 0;
+		var minY = 0;
+		var maxX = this.width - 1;
+		var maxY = this.height - 1;
+
+		// Find highest and lowest X- and Y-coordinates
+		for(var i in points) {
+			var point = points[i];
+
+			if( point.x < minX ) {
+				minX = point.x;
+			}
+			if( point.y < minY ) {
+				minY = point.y;
+			}
+			if( point.x > maxX ) {
+				maxX = point.x;
+			}
+			if( point.y > maxY ) {
+				maxY = point.y;
+			}
+		}
+
+		// If any of the most extreme points lie outside the matrix's dimensions, expand it to accomodate them
+		var minDifferenceX	= 0 - minX;
+		var minDifferenceY	= 0 - minY;
+		var maxDifferenceX	= maxX - (this.width - 1);
+		var maxDifferenceY	= maxY - (this.height - 1);
+
+		if( minDifferenceX || minDifferenceY || maxDifferenceX || maxDifferenceY ) {
+			this.rebound(minDifferenceX, minDifferenceY, maxDifferenceX, maxDifferenceY);
+		}
 	}
 
 	/**
 	 * Shift the matrix's nodes.
 	 */
-	Matrix.prototype.translate = function() {
+	Matrix.prototype.translate = function(x, y) {
 
 	}
 

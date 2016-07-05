@@ -21,6 +21,15 @@ define(['constants'], function(constants) {
 		this.ctx.clearRect(startX, startY, endX, endY);
 	}
 
+	Layer.prototype.draw = function(matrix, origin) {
+		// origin provides drawing offset. cumulatively builds through recursion
+		/*
+		-start with master matrix. draw each node with 0,0 origin
+		-get its children and add previous(?) offset. draw them. repeat
+		recurse: foreach child: this.draw(childMatrix, oldOrigin + childOrigin);
+		*/
+	}
+
 	// new drawing method will need to check each entity and flatten them into one?
 	// maybe have some flag that sets an entity to "updated" and redraw it then
 
