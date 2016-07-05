@@ -21,45 +21,35 @@ define(['constants'], function(constants) {
 		this.ctx.clearRect(startX, startY, endX, endY);
 	}
 
+	/**
+	 * Recursively draws the nodes of a matrix and all its child matrices.
+	 *
+	 * @param		{object}	matrix
+	 * @param		{object}	origin
+	 */
 	Layer.prototype.draw = function(matrix, origin) {
-		// origin provides drawing offset. cumulatively builds through recursion
-		/*
-		-start with master matrix. draw each node with 0,0 origin
-		-get its children and add previous(?) offset. draw them. repeat
-		recurse: foreach child: this.draw(childMatrix, oldOrigin + childOrigin);
-		*/
-	}
+		var self			= this;
+		var nodeWidth		= constants.tilePxWidth;
+		this.ctx.fillStyle	= 'rgba(105, 105, 200, 1)';
 
-	// new drawing method will need to check each entity and flatten them into one?
-	// maybe have some flag that sets an entity to "updated" and redraw it then
+		// Draw all nodes in the supplied matrix
+		matrix.eachNode(function(node) {
+			if( node ) {
+				var nodeStartX = node.x * nodeWidth + origin.x;
+				var nodeStartY = node.y * nodeWidth + origin.y;
 
-	/*
-	Layer.prototype.draw = function(points, vportAdjustment, shave, vportDims) {
-		this.eachTile(points, vportAdjustment, shave, vportDims, this.drawTile);
-	}
-	*/
-
-	/*
-	Layer.prototype.eachTile = function(points, vportAdjustment, shave, vportDims, callback) {
-		for(var index in points) {
-			var point		= points[index];
-			var shaveX	= 0;
-			var shaveY	= 0;
-
-			// Determines how much of the right and bottom tiles should be shaved off
-			if( ( (index % vportDims.width) + 1 ) == vportDims.width ) {
-				shaveX = shave.x;
+				self.ctx.fillRect(nodeStartX, nodeStartY, nodeWidth, nodeWidth);
 			}
-			if( (index / vportDims.width) >= vportDims.height - 1 ) {
-				shaveY = shave.y;
-			}
+		});
 
-			callback(point, vportAdjustment, shaveX, shaveY, this);
+		// Recurse through the child matrices
+		for(var i in matrix.children) {
+			var childMatrix	= matrix.children[i];
+			var originSum		= {x: origin.x + childMatrix.origin.x, y: origin.y + childMatrix.origin.y};
+
+			this.draw(childMatrix, originSum);
 		}
 	}
-	*/
-
-	//Layer.prototype.drawTile = function() {}
 
 	return Layer;
 });

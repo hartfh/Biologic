@@ -48,22 +48,39 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 	}
 
 	/**
+	 * Checks if supplied coordinates are within the matrix's boundaries.
+	 *
+	 * @param		{integer}		x
+	 * @param		{integer}		y
+	 * @return	{boolean}
+	 */
+	Matrix.prototype.pointExists = function(x, y) {
+		if( typeof(x) == 'undefined' || typeof(y) == 'undefined' ) {
+			throw new TypeError('Invalid matrix indices supplied');
+		}
+
+		if( x < 0 || x >= this.width ) {
+			return false;
+		}
+
+		if( y < 0 || y >= this.height ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Gets the node at the provided indices.
 	 *
 	 * @return	{object}
 	 */
 	Matrix.prototype.getNode = function(x, y) {
-		if( typeof(x) == 'undefined' || typeof(y) == 'undefined' ) {
-			throw new TypeError('Invalid matrix indices supplied');
-		}
-		if( x < 0 || x >= this.width ) {
-			return false;
-		}
-		if( y < 0 || y >= this.height ) {
-			return false;
+		if( this.pointExists(x, y) ) {
+			return this.nodes[y][x]
 		}
 
-		return this.nodes[y][x];
+		return false;
 	}
 
 	/**
@@ -339,15 +356,31 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 	Matrix.prototype.getSpiralPoints = function(origin) {
 		// clockwise vs. counterclockwise
 
-		var compass = new Compass();
+		var points	= [];
+		var compass	= new Compass();
+		var armLength	= 0;
+		var armPoint	= origin;
+		var inBounds	= true;
 
+		points.push(armPoint);
 
-		/*
-		-pick center
-		-go "direction" 1
-		-rotate and increase length by 1
-		-restart
-		*/
+		// Gather points as long as we're within the matrix's boundaries
+		while( inBounds ) {
+			for(var i = 1; i < armLength + 1; i++) {
+				var state		= compass.getState();
+				var coordMod	= state.coordinates;
+
+				armPoint = {x: armPoint.x + coordMod.x, y: armPoint.y + coordMod.y};
+				inBounds = this.pointExists(armPoint.x, armPoint.y);
+
+				if( inBounds ) {
+					points.push(armPoint);
+				}
+			}
+
+			armLength++;
+			compass.rotate();
+		}
 	}
 
 	// reverse position of all nodes
@@ -372,7 +405,13 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 		// Create a new temporary matrix that is larger than original
 		var newWidth	= this.width + negX + posX;
 		var newHeight	= this.height + negX + posY;
-		var tempMatrix = new Matrix(newWidth, newHeight);
+		var tempArgs	= {
+			width:	newWidth,
+			height:	newHeight,
+			origin:	{x: 0, y: 0},
+			parent:	null
+		};
+		var tempMatrix = new Matrix(tempArgs);
 
 		// Copy offset nodes into the temporary matrix
 		this.eachNode(function(node) {
@@ -437,6 +476,8 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 	Matrix.prototype.translate = function(x, y) {
 
 	}
+
+	Matrix.prototype.incorporatePoints = function(points, origin) {}
 
 	// extend into various patterns
 	// possibly have seed() run at init() based on child class specs
