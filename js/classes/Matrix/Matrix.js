@@ -353,9 +353,34 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 		return offsetPoints;
 	}
 
-	Matrix.prototype.getSpiralPoints = function(origin) {
-		// clockwise vs. counterclockwise
 
+	Matrix.prototype.getCrossPoints = function(origin, limit) {
+		var limit		= limit || false;
+		var points	= [];
+		var compass	= new Compass();
+
+		// Include the origin
+		points.push(origin);
+
+		for(var i = 0; i < 4; i++) {
+			// get points
+
+			compass.rotate();
+		}
+
+		return points;
+	}
+
+	/**
+	 * Gets the points that make up an outward, clockwise-spiraling line.
+	 *
+	 * @param		{object}		origin	Center point of the spiral
+	 * @param		{object}		limit	Optional parameter which limits the size of the spiral
+	 * @return	{array}
+	 */
+	Matrix.prototype.getSpiralPoints = function(origin, limit) {
+		// clockwise vs. counterclockwise
+		var limit		= limit || false;
 		var points	= [];
 		var compass	= new Compass();
 		var armLength	= 0;
@@ -380,6 +405,12 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 
 			armLength++;
 			compass.rotate();
+
+			if( limit ) {
+				if( armLength >= limit ) {
+					break;
+				}
+			}
 		}
 	}
 
@@ -431,7 +462,7 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 	}
 
 	/**
-	 * Checks a collection of points for any that lie outside matrix's dimensions and rebounds the matrix if need be
+	 * Checks a collection of points for any that lie outside matrix's dimensions and rebounds the matrix if need be.
 	 *
 	 * @param		{array}		points	Array of objects containing X- and Y-coordinates
 	 */
@@ -477,7 +508,10 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 
 	}
 
-	Matrix.prototype.incorporatePoints = function(points, origin) {}
+	Matrix.prototype.incorporatePoints = function(points, origin, nodeConfig) {
+		// checkBounds() and rebound() if need be
+		// set each point in "points" as new Node(nodeConfig)
+	}
 
 	// extend into various patterns
 	// possibly have seed() run at init() based on child class specs
