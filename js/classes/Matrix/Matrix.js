@@ -12,12 +12,13 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 	 * @param		{object}		parent	Parent matrix
 	 */
 	Matrix.prototype.init = function(config) {
-		this.width	= config.width || 0;
-		this.height	= config.height || 0;
-		this.origin	= config.origin || {x: 0, y: 0};
-		this.nodes	= [];
-		this.children	= [];
-		this.parent	= config.parent;
+		this.width	= config.width || 0;			// Width of 2-D nodes array
+		this.height	= config.height || 0;			// Height of 2-D nodes array
+		this.origin	= config.origin || {x: 0, y: 0};	// Start point of this matrix relative to parent matrix
+		this.nodes	= [];						// 2-dimensional array of Node objects
+		this.staging	= [];						// Staging area for changes to nodes
+		this.children	= [];						// Child matrices
+		this.parent	= config.parent;				// Parent matrix
 
 		for(var y = 0; y < this.height; y++) {
 			var column = [];
@@ -31,24 +32,7 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 	}
 
 	/**
-	 * Applies a callback function to each node.
-	 *
-	 * @param		{function}
-	 */
-	Matrix.prototype.eachNode = function(callback) {
-		for(var j in this.nodes) {
-			var column = this.nodes[j];
-
-			for(var i in column) {
-				var node = this.getNode(i, j);
-
-				callback(node);
-			}
-		}
-	}
-
-	/**
-	 * Checks if supplied coordinates are within the matrix's boundaries.
+	 * Checks if provided coordinates are within this matrix's boundaries.
 	 *
 	 * @param		{integer}		x
 	 * @param		{integer}		y
@@ -71,8 +55,10 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 	}
 
 	/**
-	 * Gets the node at the provided indices.
+	 * Gets the node at the provided coordinates.
 	 *
+	 * @param		{integer}		x
+	 * @param		{integer}		y
 	 * @return	{object}
 	 */
 	Matrix.prototype.getNode = function(x, y) {
@@ -81,6 +67,69 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Creates a new Node and adds it into this matrix.
+	 *
+	 * @param		{integer}		x		Node X-coordinate in matrix
+	 * @param		{integer}		y		Node Y-coordinate in matrix
+	 * @param		{object}		config	Configuration object for new Node
+	 * @return	{object}
+	 */
+	Matrix.prototype.addNode = function(x, y, config) {
+		var config = config || {};
+
+		config.x = x;
+		config.y = y;
+
+		var node = new Node(config);
+
+		this.nodes[y][x] = node;
+
+		return node;
+	}
+
+	/**
+	 * Creates new nodes from a set of provided points.
+	 *
+	 * @param		{array}	points		Array of point objects
+	 * @param		{object}	nodeConfig	Configuration object for new Node
+	 * @return	{array}
+	 */
+	Matrix.prototype.addNodes = function(points, nodeConfig) {
+		var addedNodes = [];
+
+		this.checkBounds(points);
+
+		// what to do if point already has a node. Ignore point?
+
+		// Create new nodes
+		for(var i in points) {
+			var point	= points[i];
+			var node	= this.addNode(point.x, point.y, nodeConfig);
+
+			addedNodes.push(node);
+		}
+
+		return addedNodes;
+	}
+
+	/**
+	 * Applies a callback function to each node in this matrix.
+	 *
+	 * @param		{function}
+	 */
+	Matrix.prototype.eachNode = function(callback) {
+		for(var j in this.nodes) {
+			var column = this.nodes[j];
+
+			for(var i in column) {
+				var node = this.getNode(i, j);
+
+				callback(node);
+			}
+		}
 	}
 
 	/**
@@ -353,17 +402,26 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 		return offsetPoints;
 	}
 
-
 	Matrix.prototype.getCrossPoints = function(origin, limit) {
-		var limit		= limit || false;
+		var limit		= limit || 20;		// Default arm length
 		var points	= [];
 		var compass	= new Compass();
 
 		// Include the origin
 		points.push(origin);
 
+		// Repeat four times: once for each direction
 		for(var i = 0; i < 4; i++) {
-			// get points
+			// gather points
+			var state			= compass.getState();
+			var coordinates	= state.coordinates;
+
+			// Extend arm of points outwards
+			for(var k = 0; k < limit; k++) {
+				var point = {x: origin.x + (coordinates.x * k), y: origin.y + (coordinates.y * k)};
+
+				points.push(point);
+			}
 
 			compass.rotate();
 		}
@@ -380,12 +438,12 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 	 */
 	Matrix.prototype.getSpiralPoints = function(origin, limit) {
 		// clockwise vs. counterclockwise
-		var limit		= limit || false;
+		var limit		= limit || 40;		// Default limit on arm length
 		var points	= [];
 		var compass	= new Compass();
-		var armLength	= 0;
+		var armLength	= 0;				// Tracks current arm length
 		var armPoint	= origin;
-		var inBounds	= true;
+		var inBounds	= true;			// Tracks if spiral has exceeded matrix's bounds
 
 		points.push(armPoint);
 
@@ -406,10 +464,8 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 			armLength++;
 			compass.rotate();
 
-			if( limit ) {
-				if( armLength >= limit ) {
-					break;
-				}
+			if( armLength >= limit ) {
+				break;
 			}
 		}
 	}
@@ -462,7 +518,7 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 	}
 
 	/**
-	 * Checks a collection of points for any that lie outside matrix's dimensions and rebounds the matrix if need be.
+	 * Checks a collection of points for any that lie outside this matrix's dimensions and rebounds the matrix if need be.
 	 *
 	 * @param		{array}		points	Array of objects containing X- and Y-coordinates
 	 */
@@ -502,19 +558,62 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 	}
 
 	/**
-	 * Shift the matrix's nodes.
+	 * Shifts this matrix's nodes.
+	 *
+	 * @param		{integer}		x
+	 * @param		{integer}		y
 	 */
 	Matrix.prototype.translate = function(x, y) {
-
+		// first check if need to rebound matrix to accomodate node shift
+		// then move nodes and update their coordinate properties
+		// this.eachNode( function(node) { node.x += x; node.y += y; // also change indices with this.nodes  } );
 	}
 
-	Matrix.prototype.incorporatePoints = function(points, origin, nodeConfig) {
-		// checkBounds() and rebound() if need be
-		// set each point in "points" as new Node(nodeConfig)
+	Matrix.prototype.flatten = function() {
+		// pull all child matrices into this one
+	}
+
+	/**
+	 * Deep copies contents of nodes array into a fresh staging array.
+	 */
+	Matrix.prototype.pushStaging = function() {
+		this.clearStaging();
+
+		this.eachNode(function(node) {
+			var duplicate = node.duplicate();
+
+			this.staging[node.y][node.x] = duplicate;
+		});
+	}
+
+	/**
+	 * Copies contents of staging into nodes array, then clears staging.
+	 */
+	Matrix.prototype.pullStaging = function() {
+		this.nodes = this.staging;
+
+		this.clearStaging();
+	}
+
+	/**
+	 * Resets and prepares staging as an empty 2-dimensional matrix with dimensions equal to current width and height properties.
+	 */
+	Matrix.prototype.clearStaging = function() {
+		this.staging = [];
+
+		for(var y = 0; y < this.height; y++) {
+			var column = [];
+
+			for(var x = 0; x < this.width; x++) {
+				column.push(false);
+			}
+
+			this.staging.push(column);
+		}
 	}
 
 	// extend into various patterns
 	// possibly have seed() run at init() based on child class specs
 
 	return Matrix;
-})
+});
