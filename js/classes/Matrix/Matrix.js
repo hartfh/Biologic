@@ -417,7 +417,7 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 			var coordinates	= state.coordinates;
 
 			// Extend arm of points outwards
-			for(var k = 0; k < limit; k++) {
+			for(var k = 1; k < limit + 1; k++) {
 				var point = {x: origin.x + (coordinates.x * k), y: origin.y + (coordinates.y * k)};
 
 				points.push(point);
