@@ -132,6 +132,15 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 		}
 	}
 
+	// TODO: test this
+	Matrix.prototype.eachPoint = function(callback) {
+		for(var j = 0; j < this.height; j++) {
+			for(var i = 0; i < this.width; i++) {
+				calback({x: i; y: j});
+			}
+		}
+	}
+
 	/**
 	 * Gets the points that make up a line region.
 	 *
@@ -461,13 +470,27 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 				}
 			}
 
-			armLength++;
+			armLength += 2;
 			compass.rotate();
 
 			if( armLength >= limit ) {
 				break;
 			}
 		}
+
+		return points;
+	}
+
+	Matrix.prototype.getRandomPoints = function() {
+		// get a collection of points from anywhere in the matrix
+
+		// loop through all points. some percent chance to include that point.
+	}
+
+	Matrix.prototype.addChild = function(config) {
+		var child = new Matrix(config);
+
+		this.children.push(child);
 	}
 
 	// reverse position of all nodes
