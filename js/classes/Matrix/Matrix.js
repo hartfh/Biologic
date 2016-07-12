@@ -481,16 +481,36 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 		return points;
 	}
 
-	Matrix.prototype.getRandomPoints = function() {
-		// get a collection of points from anywhere in the matrix
+	/**
+	 * Get a collection of random points from anywhere in this matrix.
+	 *
+	 * @param		{float}	percent	Decimal chance for any given point to be included.
+	 * @return	{array}
+	 */
+	Matrix.prototype.getRandomPoints = function(percent) {
+		var points = [];
 
-		// loop through all points. some percent chance to include that point.
+		this.eachPoint(function(point) {
+			if( percent >= Math.random() ) {
+				points.push(point);
+			}
+		});
+
+		return points;
 	}
 
+	/**
+	 * Creates a new matrix and adds it to this matrix's children.
+	 *
+	 * @param		{object}	config	Configuration object for child matrix.
+	 * @return	{object}
+	 */
 	Matrix.prototype.addChild = function(config) {
 		var child = new Matrix(config);
 
 		this.children.push(child);
+
+		return child;
 	}
 
 	// reverse position of all nodes
@@ -597,7 +617,7 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 	}
 
 	/**
-	 * Deep copies contents of nodes array into a fresh staging array.
+	 * Copies contents of nodes array into a fresh staging array.
 	 */
 	Matrix.prototype.pushStaging = function() {
 		this.clearStaging();
