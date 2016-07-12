@@ -32,6 +32,146 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 	}
 
 	/**
+	 * Copies contents of nodes array into a fresh staging array.
+	 */
+	Matrix.prototype.pushStaging = function() {
+		this.clearStaging();
+
+		this.eachNode(function(node) {
+			var duplicate = node.duplicate();
+
+			this.staging[node.y][node.x] = duplicate;
+		});
+	}
+
+	/**
+	 * Copies contents of staging into nodes array, then clears staging.
+	 */
+	Matrix.prototype.pullStaging = function() {
+		this.nodes = this.staging;
+
+		this.clearStaging();
+	}
+
+	/**
+	 * Resets and prepares staging as an empty 2-dimensional matrix with dimensions equal to current width and height properties.
+	 */
+	Matrix.prototype.clearStaging = function() {
+		this.staging = [];
+
+		for(var y = 0; y < this.height; y++) {
+			var column = [];
+
+			for(var x = 0; x < this.width; x++) {
+				column.push(false);
+			}
+
+			this.staging.push(column);
+		}
+	}
+
+	/**
+	 * Creates a new matrix and adds it to this matrix's children.
+	 *
+	 * @param		{object}	config	Configuration object for child matrix.
+	 * @return	{object}
+	 */
+	Matrix.prototype.addChild = function(config) {
+		var child = new Matrix(config);
+
+		this.children.push(child);
+
+		return child;
+	}
+
+	// reverse position of all nodes
+	Matrix.prototype.flip = function() {
+		// flip vertically or horizontally
+	}
+
+	/**
+	 * Expands matrix in the negative and/or positive directions.
+	 *
+	 * @param		{integer}		negX		Amount to expand in negative x direction
+	 * @param		{integer}		negY		Amount to expand in negative y direction
+	 * @param		{integer}		posX		Amount to expand in positive x direction
+	 * @param		{integer}		posY		Amount to expand in positive y direction
+	 */
+	Matrix.prototype.rebound = function(negX, negY, posX, posY) {
+		var negX = Math.abs(negX) || 0;
+		var negY = Math.abs(negY) || 0;
+		var posX = posX || 0;
+		var posY = posY || 0;
+
+		// Create a new temporary matrix that is larger than original
+		var newWidth	= this.width + negX + posX;
+		var newHeight	= this.height + negX + posY;
+		var tempArgs	= {
+			width:	newWidth,
+			height:	newHeight,
+			origin:	{x: 0, y: 0},
+			parent:	null
+		};
+		var tempMatrix = new Matrix(tempArgs);
+
+		// Copy offset nodes into the temporary matrix
+		this.eachNode(function(node) {
+			if( node ) {
+				node.x += negX;
+				node.y += negY;
+
+				tempMatrix.node[node.y][node.x] = node;
+			}
+		});
+
+		// Adjust this matrix to have the same nodes and dimensions of the new one
+		this.nodes	= tempMatrix.nodes;
+		this.width	= newWidth;
+		this.height	= newHeight;
+		this.origin	= {x: this.origin.x - negX, y: this.origin.y - negY};
+	}
+
+	/**
+	 * Checks a collection of points for any that lie outside this matrix's dimensions and rebounds the matrix if need be.
+	 *
+	 * @param		{array}		points	Array of objects containing X- and Y-coordinates
+	 */
+	Matrix.prototype.checkBounds = function(points) {
+		var minX = 0;
+		var minY = 0;
+		var maxX = this.width - 1;
+		var maxY = this.height - 1;
+
+		// Find highest and lowest X- and Y-coordinates
+		for(var i in points) {
+			var point = points[i];
+
+			if( point.x < minX ) {
+				minX = point.x;
+			}
+			if( point.y < minY ) {
+				minY = point.y;
+			}
+			if( point.x > maxX ) {
+				maxX = point.x;
+			}
+			if( point.y > maxY ) {
+				maxY = point.y;
+			}
+		}
+
+		// If any of the most extreme points lie outside the matrix's dimensions, expand it to accomodate them
+		var minDifferenceX	= 0 - minX;
+		var minDifferenceY	= 0 - minY;
+		var maxDifferenceX	= maxX - (this.width - 1);
+		var maxDifferenceY	= maxY - (this.height - 1);
+
+		if( minDifferenceX || minDifferenceY || maxDifferenceX || maxDifferenceY ) {
+			this.rebound(minDifferenceX, minDifferenceY, maxDifferenceX, maxDifferenceY);
+		}
+	}
+
+	/**
 	 * Checks if provided coordinates are within this matrix's boundaries.
 	 *
 	 * @param		{integer}		x
@@ -52,84 +192,6 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 		}
 
 		return true;
-	}
-
-	/**
-	 * Gets the node at the provided coordinates.
-	 *
-	 * @param		{integer}		x
-	 * @param		{integer}		y
-	 * @return	{object}
-	 */
-	Matrix.prototype.getNode = function(x, y) {
-		if( this.pointExists(x, y) ) {
-			return this.nodes[y][x]
-		}
-
-		return false;
-	}
-
-	/**
-	 * Creates a new Node and adds it into this matrix.
-	 *
-	 * @param		{integer}		x		Node X-coordinate in matrix
-	 * @param		{integer}		y		Node Y-coordinate in matrix
-	 * @param		{object}		config	Configuration object for new Node
-	 * @return	{object}
-	 */
-	Matrix.prototype.addNode = function(x, y, config) {
-		var config = config || {};
-
-		config.x = x;
-		config.y = y;
-
-		var node = new Node(config);
-
-		this.nodes[y][x] = node;
-
-		return node;
-	}
-
-	/**
-	 * Creates new nodes from a set of provided points.
-	 *
-	 * @param		{array}	points		Array of point objects
-	 * @param		{object}	nodeConfig	Configuration object for new Node
-	 * @return	{array}
-	 */
-	Matrix.prototype.addNodes = function(points, nodeConfig) {
-		var addedNodes = [];
-
-		this.checkBounds(points);
-
-		// what to do if point already has a node. Ignore point?
-
-		// Create new nodes
-		for(var i in points) {
-			var point	= points[i];
-			var node	= this.addNode(point.x, point.y, nodeConfig);
-
-			addedNodes.push(node);
-		}
-
-		return addedNodes;
-	}
-
-	/**
-	 * Applies a callback function to each node in this matrix.
-	 *
-	 * @param		{function}
-	 */
-	Matrix.prototype.eachNode = function(callback) {
-		for(var j in this.nodes) {
-			var column = this.nodes[j];
-
-			for(var i in column) {
-				var node = this.getNode(i, j);
-
-				callback(node);
-			}
-		}
 	}
 
 	// TODO: test this
@@ -500,159 +562,130 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 	}
 
 	/**
-	 * Creates a new matrix and adds it to this matrix's children.
+	 * Gets the node at the provided coordinates.
 	 *
-	 * @param		{object}	config	Configuration object for child matrix.
+	 * @param		{integer}		x
+	 * @param		{integer}		y
 	 * @return	{object}
 	 */
-	Matrix.prototype.addChild = function(config) {
-		var child = new Matrix(config);
+	Matrix.prototype.getNode = function(x, y) {
+		if( this.pointExists(x, y) ) {
+			return this.nodes[y][x]
+		}
 
-		this.children.push(child);
-
-		return child;
-	}
-
-	// reverse position of all nodes
-	Matrix.prototype.flip = function() {
-		// flip vertically or horizontally
+		return false;
 	}
 
 	/**
-	 * Expands matrix in the negative and/or positive directions.
+	 * Creates a new Node and adds it into this matrix.
 	 *
-	 * @param		{integer}		negX		Amount to expand in negative x direction
-	 * @param		{integer}		negY		Amount to expand in negative y direction
-	 * @param		{integer}		posX		Amount to expand in positive x direction
-	 * @param		{integer}		posY		Amount to expand in positive y direction
+	 * @param		{integer}		x		Node X-coordinate in matrix
+	 * @param		{integer}		y		Node Y-coordinate in matrix
+	 * @param		{object}		config	Configuration object for new Node
+	 * @return	{object}
 	 */
-	Matrix.prototype.rebound = function(negX, negY, posX, posY) {
-		var negX = Math.abs(negX) || 0;
-		var negY = Math.abs(negY) || 0;
-		var posX = posX || 0;
-		var posY = posY || 0;
+	Matrix.prototype.addNode = function(x, y, config) {
+		var config = config || {};
 
-		// Create a new temporary matrix that is larger than original
-		var newWidth	= this.width + negX + posX;
-		var newHeight	= this.height + negX + posY;
-		var tempArgs	= {
-			width:	newWidth,
-			height:	newHeight,
-			origin:	{x: 0, y: 0},
-			parent:	null
-		};
-		var tempMatrix = new Matrix(tempArgs);
+		config.x = x;
+		config.y = y;
 
-		// Copy offset nodes into the temporary matrix
-		this.eachNode(function(node) {
-			if( node ) {
-				node.x += negX;
-				node.y += negY;
+		var node = new Node(config);
 
-				tempMatrix.node[node.y][node.x] = node;
-			}
-		});
+		this.nodes[y][x] = node;
 
-		// Adjust this matrix to have the same nodes and dimensions of the new one
-		this.nodes	= tempMatrix.nodes;
-		this.width	= newWidth;
-		this.height	= newHeight;
-		this.origin	= {x: this.origin.x - negX, y: this.origin.y - negY};
+		return node;
 	}
 
 	/**
-	 * Checks a collection of points for any that lie outside this matrix's dimensions and rebounds the matrix if need be.
+	 * Creates new nodes from a set of provided points.
 	 *
-	 * @param		{array}		points	Array of objects containing X- and Y-coordinates
+	 * @param		{array}	points		Array of point objects
+	 * @param		{object}	nodeConfig	Configuration object for new Node
+	 * @return	{array}
 	 */
-	Matrix.prototype.checkBounds = function(points) {
-		var minX = 0;
-		var minY = 0;
-		var maxX = this.width - 1;
-		var maxY = this.height - 1;
+	Matrix.prototype.addNodes = function(points, nodeConfig) {
+		var addedNodes = [];
 
-		// Find highest and lowest X- and Y-coordinates
+		this.checkBounds(points);
+
+		// what to do if point already has a node. Ignore point?
+
+		// Create new nodes
 		for(var i in points) {
-			var point = points[i];
+			var point	= points[i];
+			var node	= this.addNode(point.x, point.y, nodeConfig);
 
-			if( point.x < minX ) {
-				minX = point.x;
-			}
-			if( point.y < minY ) {
-				minY = point.y;
-			}
-			if( point.x > maxX ) {
-				maxX = point.x;
-			}
-			if( point.y > maxY ) {
-				maxY = point.y;
-			}
+			addedNodes.push(node);
 		}
 
-		// If any of the most extreme points lie outside the matrix's dimensions, expand it to accomodate them
-		var minDifferenceX	= 0 - minX;
-		var minDifferenceY	= 0 - minY;
-		var maxDifferenceX	= maxX - (this.width - 1);
-		var maxDifferenceY	= maxY - (this.height - 1);
+		return addedNodes;
+	}
 
-		if( minDifferenceX || minDifferenceY || maxDifferenceX || maxDifferenceY ) {
-			this.rebound(minDifferenceX, minDifferenceY, maxDifferenceX, maxDifferenceY);
+	/**
+	 * Applies a callback function to each node in this matrix.
+	 *
+	 * @param		{function}
+	 */
+	Matrix.prototype.eachNode = function(callback) {
+		for(var j in this.nodes) {
+			var column = this.nodes[j];
+
+			for(var i in column) {
+				var node = this.getNode(i, j);
+
+				callback(node);
+			}
 		}
 	}
 
+	// TODO: Test this
 	/**
 	 * Shifts this matrix's nodes.
 	 *
 	 * @param		{integer}		x
 	 * @param		{integer}		y
 	 */
-	Matrix.prototype.translate = function(x, y) {
-		// first check if need to rebound matrix to accomodate node shift
-		// then move nodes and update their coordinate properties
-		// this.eachNode( function(node) { node.x += x; node.y += y; // also change indices with this.nodes  } );
+	Matrix.prototype.shiftNodes = function(x, y) {
+		// Check if the matrix needs to be rebounded to accomodate node shift
+		var negX = 0;
+		var negY = 0;
+		var posX = 0;
+		var posY = 0;
+
+		if( x > 0 ) {
+			posX = x;
+		} else if( x < 0 ) {
+			negX = x;
+		}
+
+		if( y > 0 ) {
+			posY = y;
+		} else if( y < 0 ) {
+			negY = y;
+		}
+
+		if( negX || negY || posX || posY ) {
+			this.rebound(negX, negY, posX, posY);
+		}
+
+		this.pushStaging();
+
+		// Copy nodes into staging array in shifted indices and update their coordinate properties
+		this.eachNode(function(node) {
+			node.x += x;
+			node.y += y;
+
+			this.staging[node.y][node.x] = node;
+		});
+
+		this.pullStaging();
+
+		// or, checkBounds() here?
 	}
 
 	Matrix.prototype.flatten = function() {
 		// pull all child matrices into this one
-	}
-
-	/**
-	 * Copies contents of nodes array into a fresh staging array.
-	 */
-	Matrix.prototype.pushStaging = function() {
-		this.clearStaging();
-
-		this.eachNode(function(node) {
-			var duplicate = node.duplicate();
-
-			this.staging[node.y][node.x] = duplicate;
-		});
-	}
-
-	/**
-	 * Copies contents of staging into nodes array, then clears staging.
-	 */
-	Matrix.prototype.pullStaging = function() {
-		this.nodes = this.staging;
-
-		this.clearStaging();
-	}
-
-	/**
-	 * Resets and prepares staging as an empty 2-dimensional matrix with dimensions equal to current width and height properties.
-	 */
-	Matrix.prototype.clearStaging = function() {
-		this.staging = [];
-
-		for(var y = 0; y < this.height; y++) {
-			var column = [];
-
-			for(var x = 0; x < this.width; x++) {
-				column.push(false);
-			}
-
-			this.staging.push(column);
-		}
 	}
 
 	// extend into various patterns
