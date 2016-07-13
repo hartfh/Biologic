@@ -35,8 +35,8 @@ define(['constants'], function(constants) {
 		// Draw all nodes in the supplied matrix
 		matrix.eachNode(function(node) {
 			if( node ) {
-				var nodeStartX = node.x * nodeWidth + origin.x;
-				var nodeStartY = node.y * nodeWidth + origin.y;
+				var nodeStartX = (node.x + origin.x) * nodeWidth;
+				var nodeStartY = (node.y + origin.y) * nodeWidth;
 
 				self.ctx.fillRect(nodeStartX, nodeStartY, nodeWidth, nodeWidth);
 			}

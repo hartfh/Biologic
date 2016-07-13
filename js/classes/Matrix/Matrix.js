@@ -105,7 +105,7 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 
 		// Create a new temporary matrix that is larger than original
 		var newWidth	= this.width + negX + posX;
-		var newHeight	= this.height + negX + posY;
+		var newHeight	= this.height + negY + posY;
 		var tempArgs	= {
 			width:	newWidth,
 			height:	newHeight,
@@ -168,6 +168,19 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 
 		if( minDifferenceX || minDifferenceY || maxDifferenceX || maxDifferenceY ) {
 			this.rebound(minDifferenceX, minDifferenceY, maxDifferenceX, maxDifferenceY);
+
+			// Adjust any negative points to have positive coordinates
+			if( minDifferenceX || minDifferenceY ) {
+				pointLooop:
+				for(var i in points) {
+					var point = points[i];
+
+					point.x += minDifferenceX;
+					point.y += minDifferenceY;
+
+					points[i] = point;
+				}
+			}
 		}
 	}
 
@@ -194,11 +207,15 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 		return true;
 	}
 
-	// TODO: test this
+	/**
+	 * Passes each point in this matrix as an argument to a provided callback function.
+	 *
+	 * @param		{function}	callback
+	 */
 	Matrix.prototype.eachPoint = function(callback) {
 		for(var j = 0; j < this.height; j++) {
 			for(var i = 0; i < this.width; i++) {
-				calback({x: i; y: j});
+				callback({x: i, y: j});
 			}
 		}
 	}
@@ -473,6 +490,13 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 		return offsetPoints;
 	}
 
+	/**
+	 * Get the points that make a cross/plus(+) sign.
+	 *
+	 * @param		{object}		origin	Point object representing the center of the cross
+	 * @param		{integer}		limit	Sets a maximum for the length of the cross' arms
+	 * @return	{array}
+	 */
 	Matrix.prototype.getCrossPoints = function(origin, limit) {
 		var limit		= limit || 20;		// Default arm length
 		var points	= [];
@@ -482,16 +506,26 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 		points.push(origin);
 
 		// Repeat four times: once for each direction
+		directionLoop:
 		for(var i = 0; i < 4; i++) {
 			// gather points
 			var state			= compass.getState();
 			var coordinates	= state.coordinates;
 
 			// Extend arm of points outwards
+			armLoop:
 			for(var k = 1; k < limit + 1; k++) {
-				var point = {x: origin.x + (coordinates.x * k), y: origin.y + (coordinates.y * k)};
+				var newX = origin.x + (coordinates.x * k);
+				var newY = origin.y + (coordinates.y * k);
 
-				points.push(point);
+				if( newX < 0 || newY < 0 ) {
+					break armLoop;
+				}
+				if( newX >= this.width || newY >= this.height ) {
+					break armLoop;
+				}
+
+				points.push({x: newX, y: newY});
 			}
 
 			compass.rotate();
@@ -532,7 +566,7 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 				}
 			}
 
-			armLength += 2;
+			armLength++;
 			compass.rotate();
 
 			if( armLength >= limit ) {
@@ -634,7 +668,9 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 			for(var i in column) {
 				var node = this.getNode(i, j);
 
-				callback(node);
+				if( node ) {
+					callback(node);
+				}
 			}
 		}
 	}
