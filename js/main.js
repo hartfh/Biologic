@@ -16,6 +16,7 @@ require(['classes/Layer', 'classes/Matrix/Matrix'], function(Layer, Matrix) {
 	//var testPoints2 = child.getCrossPoints({x: 4, y: 4});
 	var testPoints2 = child.getCirclePoints({x: 4, y: 4}, 4, 'edge');
 	child.addNodes(testPoints2, {});
+	child.shiftNodes(1, 0);
 
 	testLayer.draw(testMatrix, {x: 0, y: 0});
 });

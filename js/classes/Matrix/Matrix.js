@@ -35,12 +35,14 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 	 * Copies contents of nodes array into a fresh staging array.
 	 */
 	Matrix.prototype.pushStaging = function() {
+		var self = this;
+
 		this.clearStaging();
 
 		this.eachNode(function(node) {
 			var duplicate = node.duplicate();
 
-			this.staging[node.y][node.x] = duplicate;
+			self.staging[node.y][node.x] = duplicate;
 		});
 	}
 
@@ -120,7 +122,7 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 				node.x += negX;
 				node.y += negY;
 
-				tempMatrix.node[node.y][node.x] = node;
+				tempMatrix.nodes[node.y][node.x] = node;
 			}
 		});
 
@@ -578,9 +580,35 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 	}
 
 	/**
+	 * Gets points that create a uniformly spaced grid.
+	 *
+	 * @param		{integer}		spacing	Amount to space out the points by
+	 * @param		{object}		offset	Optional coordinate start point of grid
+	 * @return	{array}
+	 */
+	Matrix.prototype.getGridPoints = function(spacing, offset) {
+		var offset = offset || {x: 0, y: 0};
+		var points = [];
+
+		for(var j = offset.y; j < this.height; j += spacing) {
+			for(var i = offset.x; i < this.width; i += spacing) {
+				if( this.pointExists(i, j) ) {
+					points.push({x: i, y: j});
+				}
+			}
+		}
+
+		return points;
+	}
+
+	// TODO: edge detection methods?
+	// TODO: borders around edges of shapes
+	// TODO: grow or expand edges by 1pt
+
+	/**
 	 * Get a collection of random points from anywhere in this matrix.
 	 *
-	 * @param		{float}	percent	Decimal chance for any given point to be included.
+	 * @param		{float}	percent	Decimal chance for any given point to be included
 	 * @return	{array}
 	 */
 	Matrix.prototype.getRandomPoints = function(percent) {
@@ -643,8 +671,6 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 
 		this.checkBounds(points);
 
-		// what to do if point already has a node. Ignore point?
-
 		// Create new nodes
 		for(var i in points) {
 			var point	= points[i];
@@ -683,6 +709,8 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 	 * @param		{integer}		y
 	 */
 	Matrix.prototype.shiftNodes = function(x, y) {
+		var self = this;
+
 		// Check if the matrix needs to be rebounded to accomodate node shift
 		var negX = 0;
 		var negY = 0;
@@ -705,19 +733,18 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 			this.rebound(negX, negY, posX, posY);
 		}
 
-		this.pushStaging();
+		// Setup an empty staging array
+		this.clearStaging();
 
 		// Copy nodes into staging array in shifted indices and update their coordinate properties
 		this.eachNode(function(node) {
 			node.x += x;
 			node.y += y;
 
-			this.staging[node.y][node.x] = node;
+			self.staging[node.y][node.x] = node;
 		});
 
 		this.pullStaging();
-
-		// or, checkBounds() here?
 	}
 
 	Matrix.prototype.flatten = function() {

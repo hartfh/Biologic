@@ -17,7 +17,7 @@ define(function() {
 	 */
 	Node.prototype.duplicate = function() {
 		var duplicate	= new Node({});
-		var props		= this.getOwnPropertyNames();
+		var props		= Object.getOwnPropertyNames(this);
 
 		for(var i in props) {
 			var prop = props[i];
