@@ -604,6 +604,11 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 	// TODO: edge detection methods?
 	// TODO: borders around edges of shapes
 	// TODO: grow or expand edges by 1pt
+	// TODO: center point or center line finding method
+	// create matrix factory pattern? generates random or semi-random matrices
+
+	// extend into various "creation patterns"
+	// possibly have seed() run at init() based on child class specs
 
 	/**
 	 * Get a collection of random points from anywhere in this matrix.
@@ -701,7 +706,6 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 		}
 	}
 
-	// TODO: Test this
 	/**
 	 * Shifts this matrix's nodes.
 	 *
@@ -711,7 +715,7 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 	Matrix.prototype.shiftNodes = function(x, y) {
 		var self = this;
 
-		// Check if the matrix needs to be rebounded to accomodate node shift
+		// Check if the matrix needs to be rebounded to accommodate node shift
 		var negX = 0;
 		var negY = 0;
 		var posX = 0;
@@ -733,7 +737,6 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 			this.rebound(negX, negY, posX, posY);
 		}
 
-		// Setup an empty staging array
 		this.clearStaging();
 
 		// Copy nodes into staging array in shifted indices and update their coordinate properties
@@ -747,12 +750,10 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 		this.pullStaging();
 	}
 
+	// TODO: write this
 	Matrix.prototype.flatten = function() {
-		// pull all child matrices into this one
+		// pull all child matrices and their nodes into this matrix's nodes
 	}
-
-	// extend into various patterns
-	// possibly have seed() run at init() based on child class specs
 
 	return Matrix;
 });

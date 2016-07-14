@@ -18,5 +18,13 @@ require(['classes/Layer', 'classes/Matrix/Matrix'], function(Layer, Matrix) {
 	child.addNodes(testPoints2, {});
 	child.shiftNodes(1, 0);
 
-	testLayer.draw(testMatrix, {x: 0, y: 0});
+	//testLayer.draw(testMatrix, {x: 0, y: 0});
+
+	/*
+	MatrixFactory:
+
+	-create double edge: make a matrix, then make an identical child that is 1pt smaller
+
+
+	*/
 });
