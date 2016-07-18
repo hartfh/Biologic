@@ -3,6 +3,20 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 		this.init(config);
 	};
 
+	// Right triangle
+
+	// Flower: array of circles (number of circles, size->applies to all); get hollow circle and select evenly distributed points along edge
+
+	// Circular grid of points (point lie along edge of circle)
+
+	// Cross: array of rectangles
+
+	// Elbow: two rectangles that form a 90 degree bend (direction, length2, length2, width->applies to both)
+
+	// Matrix.prototype.getCrossPoints = function(origin, limit, thickness) { // similar to old CrossPoints but essentially consists of four rectangles }
+
+	// Subtract/Erase/Clear: subtract points / clear nodes from a shape or Matrix
+
 	/**
 	 * A class for organizing and accessing a 2-dimensional array of nodes.
 	 *
