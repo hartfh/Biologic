@@ -1,4 +1,4 @@
-require(['classes/Layer', 'classes/Matrix/Matrix'], function(Layer, Matrix) {
+require(['classes/Layer', 'classes/Matrix'], function(Layer, Matrix) {
 	var testLayer = new Layer({name: 'primary-layer'});
 
 	var args = {origin: {x: 0, y: 0}, width: 10, height: 10, parent: false};
