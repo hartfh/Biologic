@@ -17,6 +17,86 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 
 	// Subtract/Erase/Clear: subtract points / clear nodes from a shape or Matrix
 
+
+
+	/*
+	Heroic.Region.prototype.rotate = function(degrees, about) {
+		if( typeof(degrees) != 'number' ) {
+			degrees = 0;
+		}
+		if( typeof(about) == 'undefined' ) {
+			var about = {x: 0, y: 0};
+		}
+
+		var self		= this;
+		var newPoints	= [];
+		var radians		= degrees * Math.PI / 180;
+		var minX = 0;
+		var minY = 0;
+
+		this.each(function(x, y) {
+			x -= about.x;
+			y -= about.y
+			var rotatedX = x * Math.cos(radians) - y * Math.sin(radians);
+			var rotatedY = y * Math.cos(radians) + x * Math.sin(radians);
+			var newPoint = {x: Math.round(rotatedX), y: Math.round(rotatedY)};
+
+			if( newPoint.x < minX ) {
+				minX = newPoint.x;
+			}
+			if( newPoint.y < minY ) {
+				minY = newPoint.y;
+			}
+
+			newPoints.push(newPoint);
+		}, degrees);
+
+		this.eachSpecial(function(x, y, index) {
+			var rotatedX = x * Math.cos(radians) - y * Math.sin(radians);
+			var rotatedY = y * Math.cos(radians) + x * Math.sin(radians);
+			var newPoint = {x: Math.round(rotatedX), y: Math.round(rotatedY)};
+
+			self.special[index] = {x: newPoint.x, y: newPoint.y};
+		});
+
+		// clear old points
+		this.points = [];
+
+		// add new points
+		for(var index in newPoints) {
+			newPoint = newPoints[index];
+
+			if( minX < 0 || minY < 0 ) {
+				newPoint.x -= minX;
+				newPoint.y -= minY;
+			}
+
+			newPoint.x += about.x;
+			newPoint.y += about.y;
+			this.addPoint(newPoint.x, newPoint.y);
+		}
+
+		if( minX < 0 || minY < 0 ) {
+			this.translate(minX, minY);
+			this.eachSpecial(function(x, y, index) {
+				self.special[index].x -= minX;
+				self.special[index].y -= minY;
+
+				// corection. unknown why y/x are sometimes -1
+				if( self.special[index].y < 0 ) {
+					self.special[index].y += 1;
+				}
+				if( self.special[index].x < 0 ) {
+					self.special[index].x += 1;
+				}
+			});
+		}
+
+		this.calcTerminus();
+		this.patch();
+	}
+	*/
+
 	/**
 	 * A class for organizing and accessing a 2-dimensional array of nodes.
 	 *
