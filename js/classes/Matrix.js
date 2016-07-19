@@ -5,9 +5,8 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 
 	// Right triangle
 
-	// Flower: array of circles (number of circles, size->applies to all); get hollow circle and select evenly distributed points along edge
-
-	// Circular grid of points (point lie along edge of circle)
+	// Circular grid of points (points lie along edge of circle)
+	// make use of rotate. get one point, rotate, copy, rotate, etc.
 
 	// Cross: array of rectangles
 
@@ -17,7 +16,27 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 
 	// Subtract/Erase/Clear: subtract points / clear nodes from a shape or Matrix
 
+	// Reset: clears all of a matrix's nodes. possibly deletes all children too
 
+
+	// Flower: array of circles (number of circles, size->applies to all); get hollow circle and select evenly distributed points along edge
+	Matrix.prototype.getFlowerPoints = function() {
+
+	}
+
+	Matrix.prototype.rotatePoints = function(points) {
+		return points;
+	}
+
+	// rotate entire matrix?
+	Matrix.prototype.rotate = function() {
+
+	}
+
+	// combined this matrix with another. also absorb all children of that matrix. unclear how to handle overlapping nodes (which takes precedence?).
+	Matrix.prototype.mergeWith = function(matrix) {
+
+	}
 
 	/*
 	Heroic.Region.prototype.rotate = function(degrees, about) {
