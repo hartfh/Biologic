@@ -21,7 +21,8 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 
 	// Flower: array of circles (number of circles, size->applies to all); get hollow circle and select evenly distributed points along edge
 	Matrix.prototype.getFlowerPoints = function() {
-
+		// create one circle, rotate, copy, etc.
+		// also possibly one larger circle at center?
 	}
 
 	Matrix.prototype.rotatePoints = function(points) {
@@ -35,6 +36,12 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 
 	// combined this matrix with another. also absorb all children of that matrix. unclear how to handle overlapping nodes (which takes precedence?).
 	Matrix.prototype.mergeWith = function(matrix) {
+
+	}
+
+	// reset all nodes as either 'edge' or 'interior'
+	// have to calculate where each node lies (if node has one or more "false" neighbors => is edge. or possibly just corner neighbors?)
+	Matrix.prototype.setNodeLocations = function() {
 
 	}
 
