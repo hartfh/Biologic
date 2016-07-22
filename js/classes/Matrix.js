@@ -25,8 +25,57 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 		// also possibly one larger circle at center?
 	}
 
-	Matrix.prototype.rotatePoints = function(points) {
-		return points;
+	// TODO: test this
+	// TODO: check if this is bugged when center point has non-integer coordinates
+	/**
+	 * Rotate a collection of points about their center.
+	 *
+	 * @param		{array}	points	Array of points
+	 * @param		{float}	degrees
+	 * @return	{array}
+	 */
+	Matrix.prototype.rotatePoints = function(points, degrees) {
+		var newPoints = [];
+
+		// Calculate the point group's center by determing the height/width of the occupied space
+		var maxX = 0;
+		var maxY = 0;
+
+		for(var i in points) {
+			var point = points[i];
+
+			if( point.x > maxX ) {
+				maxX = point.x;
+			}
+			if( point.y > maxY ) {
+				maxX = point.x;
+			}
+		}
+
+		var centerX	= Math.ceil(maxX * 0.5);
+		var centerY	= Math.ceil(maxY * 0.5);
+		var center	= {x: centerX, y: centerY};
+
+		var radians	= degrees * Math.PI / 180;
+
+		// Rotate each point about the center point
+		for( var i in points ) {
+			var point = points[i];
+
+			point.x -= center.x;
+			point.y -= center.y;
+
+			var rotatedX = point.x * Math.cos(radians) - point.y * Math.sin(radians);
+			var rotatedY = point.y * Math.cos(radians) + point.x * Math.sin(radians);
+			var newPoint = {x: Math.round(rotatedX), y: Math.round(rotatedY)};
+
+			newPoint.x += center.x;
+			newPoint.y += center.y;
+
+			newPoints.push(newPoint);
+		}
+
+		return newPoints;
 	}
 
 	// rotate entire matrix?
@@ -44,84 +93,6 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 	Matrix.prototype.setNodeLocations = function() {
 
 	}
-
-	/*
-	Heroic.Region.prototype.rotate = function(degrees, about) {
-		if( typeof(degrees) != 'number' ) {
-			degrees = 0;
-		}
-		if( typeof(about) == 'undefined' ) {
-			var about = {x: 0, y: 0};
-		}
-
-		var self		= this;
-		var newPoints	= [];
-		var radians		= degrees * Math.PI / 180;
-		var minX = 0;
-		var minY = 0;
-
-		this.each(function(x, y) {
-			x -= about.x;
-			y -= about.y
-			var rotatedX = x * Math.cos(radians) - y * Math.sin(radians);
-			var rotatedY = y * Math.cos(radians) + x * Math.sin(radians);
-			var newPoint = {x: Math.round(rotatedX), y: Math.round(rotatedY)};
-
-			if( newPoint.x < minX ) {
-				minX = newPoint.x;
-			}
-			if( newPoint.y < minY ) {
-				minY = newPoint.y;
-			}
-
-			newPoints.push(newPoint);
-		}, degrees);
-
-		this.eachSpecial(function(x, y, index) {
-			var rotatedX = x * Math.cos(radians) - y * Math.sin(radians);
-			var rotatedY = y * Math.cos(radians) + x * Math.sin(radians);
-			var newPoint = {x: Math.round(rotatedX), y: Math.round(rotatedY)};
-
-			self.special[index] = {x: newPoint.x, y: newPoint.y};
-		});
-
-		// clear old points
-		this.points = [];
-
-		// add new points
-		for(var index in newPoints) {
-			newPoint = newPoints[index];
-
-			if( minX < 0 || minY < 0 ) {
-				newPoint.x -= minX;
-				newPoint.y -= minY;
-			}
-
-			newPoint.x += about.x;
-			newPoint.y += about.y;
-			this.addPoint(newPoint.x, newPoint.y);
-		}
-
-		if( minX < 0 || minY < 0 ) {
-			this.translate(minX, minY);
-			this.eachSpecial(function(x, y, index) {
-				self.special[index].x -= minX;
-				self.special[index].y -= minY;
-
-				// corection. unknown why y/x are sometimes -1
-				if( self.special[index].y < 0 ) {
-					self.special[index].y += 1;
-				}
-				if( self.special[index].x < 0 ) {
-					self.special[index].x += 1;
-				}
-			});
-		}
-
-		this.calcTerminus();
-		this.patch();
-	}
-	*/
 
 	/**
 	 * A class for organizing and accessing a 2-dimensional array of nodes.
