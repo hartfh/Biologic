@@ -48,7 +48,7 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 				maxX = point.x;
 			}
 			if( point.y > maxY ) {
-				maxX = point.x;
+				maxY = point.y;
 			}
 		}
 
@@ -67,7 +67,7 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 
 			var rotatedX = point.x * Math.cos(radians) - point.y * Math.sin(radians);
 			var rotatedY = point.y * Math.cos(radians) + point.x * Math.sin(radians);
-			var newPoint = {x: Math.round(rotatedX), y: Math.round(rotatedY)};
+			var newPoint = {x: Math.floor(rotatedX), y: Math.floor(rotatedY)};
 
 			newPoint.x += center.x;
 			newPoint.y += center.y;
