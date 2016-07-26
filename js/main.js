@@ -1,12 +1,11 @@
 require(['classes/Layer', 'classes/Matrix', 'classes/PointCollection/Line'], function(Layer, Matrix, Line) {
 	var testLayer = new Layer({name: 'primary-layer'});
 
+	/*
 	var args = {origin: {x: 0, y: 0}, width: 10, height: 10, parent: false};
 	var testMatrix = new Matrix(args);
 
-	//var testPoints = testMatrix.getCrossPoints({x: 5, y: 5});
 	var testPoints = testMatrix.getRectanglePoints({x: 0, y: 0}, {x: 12, y: 12}, 'edge');
-	//var testPoints = testMatrix.getSpiralPoints({x: 5, y: 5});
 
 	testMatrix.addNodes(testPoints, {});
 
@@ -20,6 +19,7 @@ require(['classes/Layer', 'classes/Matrix', 'classes/PointCollection/Line'], fun
 	child.shiftNodes(1, 0);
 
 	testLayer.draw(testMatrix, {x: 0, y: 0});
+	*/
 
 	/*
 	MatrixFactory:

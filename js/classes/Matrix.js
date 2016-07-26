@@ -3,6 +3,15 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 		this.init(config);
 	};
 
+	// TODO: edge detection methods?
+	// TODO: borders around edges of shapes
+	// TODO: grow or expand edges by 1pt
+	// TODO: center point or center line finding method
+	// create matrix factory pattern? generates random or semi-random matrices
+
+	// extend into various "creation patterns"
+	// possibly have seed() run at init() based on child class specs
+
 	// Right triangle
 
 	// Circular grid of points (points lie along edge of circle)
@@ -318,6 +327,7 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 	 *
 	 * @returns	{array}
 	 */
+	/*
 	Matrix.prototype.getLinePoints = function(origin, terminus) {
 		var points = [];
 
@@ -378,6 +388,7 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 
 		return points;
 	}
+	*/
 
 	/**
 	 * Gets the points that make up a rectangular region.
@@ -387,6 +398,7 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 	 * @param		{string}	types	Which point types to include: edge or interior
 	 * @returns	{array}
 	 */
+	/*
 	Matrix.prototype.getRectanglePoints = function(origin, terminus, types) {
 		var types	 = types || 'all';
 		var points = [];
@@ -438,6 +450,7 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 
 		return points;
 	}
+	*/
 
 	/**
 	 * Gets the points that make up a circular region.
@@ -447,6 +460,7 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 	 * @param		{string}		types	Which point types to return: edge, interior or all
 	 * @returns	{array}
 	 */
+	/*
 	Matrix.prototype.getCirclePoints = function(origin, radius, types) {
 		var types			= types || 'all';
 		var points		= [];
@@ -582,6 +596,7 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 
 		return offsetPoints;
 	}
+	*/
 
 	/**
 	 * Get the points that make a cross/plus(+) sign.
@@ -631,9 +646,10 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 	 * Gets the points that make up an outward, clockwise-spiraling line.
 	 *
 	 * @param		{object}		origin	Center point of the spiral
-	 * @param		{object}		limit	Optional parameter which limits the size of the spiral
+	 * @param		{integer}		limit	Optional parameter which limits the size of the spiral
 	 * @return	{array}
 	 */
+	/*
 	Matrix.prototype.getSpiralPoints = function(origin, limit) {
 		// clockwise vs. counterclockwise
 		var limit		= limit || 40;		// Default limit on arm length
@@ -669,6 +685,7 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 
 		return points;
 	}
+	*/
 
 	/**
 	 * Gets points that create a uniformly spaced grid.
@@ -677,6 +694,7 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 	 * @param		{object}		offset	Optional coordinate start point of grid
 	 * @return	{array}
 	 */
+	/*
 	Matrix.prototype.getGridPoints = function(spacing, offset) {
 		var offset = offset || {x: 0, y: 0};
 		var points = [];
@@ -691,15 +709,7 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 
 		return points;
 	}
-
-	// TODO: edge detection methods?
-	// TODO: borders around edges of shapes
-	// TODO: grow or expand edges by 1pt
-	// TODO: center point or center line finding method
-	// create matrix factory pattern? generates random or semi-random matrices
-
-	// extend into various "creation patterns"
-	// possibly have seed() run at init() based on child class specs
+	*/
 
 	/**
 	 * Get a collection of random points from anywhere in this matrix.

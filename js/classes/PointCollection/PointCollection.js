@@ -7,5 +7,14 @@ define([], function() {
 		self.points = [];
 	}
 
+	PointCollection.prototype.rotate = function() {
+
+	}
+
+	// Ensure "array" isn't a protected word
+	PointCollection.prototype.array = function() {
+		// create a circular array of shapes
+	}
+
 	return PointCollection;
 });
