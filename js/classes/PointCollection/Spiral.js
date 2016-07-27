@@ -6,14 +6,12 @@ define(['utilities', 'classes/PointCollection/PointCollection', 'classes/Compass
 	 * @param		{integer}		config.limit	Optional parameter which limits the size of the spiral
 	 */
 	var Spiral = function(config) {
-		this.init(config);
+		this.parent.init(this, config);
 	};
 
 	Spiral.extend(PointCollection);
 
-	Spiral.prototype.init = function(config) {
-		this.parent.init(this, config);
-
+	Spiral.prototype.generatePoints = function(config) {
 		var limit		= config.limit || 30;	// Limit on arm length
 		var compass	= new Compass();
 		var armLength	= 0;					// Tracks current arm length

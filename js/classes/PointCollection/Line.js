@@ -6,14 +6,12 @@ define(['utilities', 'classes/PointCollection/PointCollection'], function(utilit
 	 * @param		{object}	config.terminus	End point
 	 */
 	var Line = function(config) {
-		this.init(config);
+		this.parent.init(this, config);
 	};
 
 	Line.extend(PointCollection);
 
-	Line.prototype.init = function(config) {
-		this.parent.init(this, config);
-
+	Line.prototype.generatePoints = function(config) {
 		var origin	= config.origin;
 		var terminus	= config.terminus;
 

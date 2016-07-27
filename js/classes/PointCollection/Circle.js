@@ -7,14 +7,12 @@ define(['utilities', 'classes/PointCollection/PointCollection'], function(utilit
 	 * @param		{string}		config.types	Which point types to return: edge, interior or all
 	 */
 	var Circle = function(config) {
-		this.init(config);
+		this.parent.init(this, config);
 	};
 
 	Circle.extend(PointCollection);
 
-	Circle.prototype.init = function(config) {
-		this.parent.init(this, config);
-
+	Circle.prototype.generatePoints = function(config) {
 		var types			= config.types || 'all';
 		var points		= [];
 		var offsetPoints	= [];
@@ -131,7 +129,6 @@ define(['utilities', 'classes/PointCollection/PointCollection'], function(utilit
 		// Apply offset to points based on origin
 		for(var index in points) {
 			var point = points[index];
-
 			var offsetPoint = {};
 
 			offsetPoint.x = point.x + origin.x;

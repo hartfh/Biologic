@@ -1,4 +1,4 @@
-require(['classes/Layer', 'classes/Matrix', 'classes/PointCollection/Line'], function(Layer, Matrix, Line) {
+require(['classes/Layer', 'classes/Matrix', 'classes/PointCollection/Line', 'classes/PointCollection/Rectangle', 'classes/PointCollection/Circle', 'classes/PointCollection/Spiral', 'classes/PointCollection/Grid'], function(Layer, Matrix, Line, Rectangle, Circle, Spiral, Grid) {
 	var testLayer = new Layer({name: 'primary-layer'});
 
 	/*
@@ -26,10 +26,36 @@ require(['classes/Layer', 'classes/Matrix', 'classes/PointCollection/Line'], fun
 	-create double edge: make a matrix, then make an identical child that is 1pt smaller
 	*/
 
-	var testShape = new Line({
+	var testLine = new Line({
 		origin:		{x: 1, y: 1},
 		terminus:		{x: 3, y: 5}
 	});
 
-	console.log(testShape);
+	var testRectangle = new Rectangle({
+		origin:		{x: 1, y: 1},
+		terminus:		{x: 3, y: 3}
+	});
+
+	var testCircle = new Circle({
+		origin:		{x: 2, y: 2},
+		radius:		3,
+		types:		'edge'
+	});
+
+	var testSpiral = new Spiral({
+		origin:		{x: 1, y: 1},
+		limit:		6
+	});
+
+	var testGrid = new Grid({
+		spacing:		2,
+		origin:		{x: 0, y: 0},
+		terminus:		{x: 5, y: 5}
+	});
+
+	console.log(testLine);
+	console.log(testRectangle);
+	console.log(testCircle);
+	console.log(testSpiral);
+	console.log(testGrid);
 });

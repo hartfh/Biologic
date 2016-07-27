@@ -7,14 +7,12 @@ define(['utilities', 'classes/PointCollection/PointCollection'], function(utilit
 	 * @param		{string}	config.types		Which point types to include: edge or interior
 	 */
 	var Rectangle = function(config) {
-		this.init(config);
+		this.parent.init(this, config);
 	};
 
 	Rectangle.extend(PointCollection);
 
-	Rectangle.prototype.init = function(config) {
-		this.parent.init(this, config);
-
+	Rectangle.prototype.generatePoints = function(config) {
 		var origin	= config.origin;
 		var terminus	= config.terminus;
 		var types		= types || 'all';
