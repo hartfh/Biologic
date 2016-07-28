@@ -38,7 +38,7 @@ define(['utilities', 'classes/PointCollection/PointCollection'], function(utilit
 				var x = slope * y + offset;
 				x = Math.round(x);
 
-				this.points.push({x: x, y: y, type: 'edge'});
+				this.addPoint({x: x, y: y});
 			}
 		} else {
 			if( origin.x < terminus.x ) {
@@ -55,7 +55,7 @@ define(['utilities', 'classes/PointCollection/PointCollection'], function(utilit
 				var y = slope * x + offset;
 				y = Math.round(y);
 
-				this.points.push({x: x, y: y, type: 'edge'});
+				this.addPoint({x: x, y: y});
 			}
 		}
 	}

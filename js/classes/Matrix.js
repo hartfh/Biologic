@@ -43,6 +43,7 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 	 * @param		{float}	degrees
 	 * @return	{array}
 	 */
+	/*
 	Matrix.prototype.rotatePoints = function(points, degrees) {
 		var newPoints = [];
 
@@ -86,6 +87,7 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 
 		return newPoints;
 	}
+	*/
 
 	// rotate entire matrix?
 	Matrix.prototype.rotate = function() {

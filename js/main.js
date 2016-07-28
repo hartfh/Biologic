@@ -28,7 +28,12 @@ require(['classes/Layer', 'classes/Matrix', 'classes/PointCollection/Line', 'cla
 
 	var testLine = new Line({
 		origin:		{x: 1, y: 1},
-		terminus:		{x: 3, y: 5}
+		terminus:		{x: 3, y: 3}
+	});
+
+	var testLine2 = new Line({
+		origin:		{x: 3, y: 3},
+		terminus:		{x: 4, y: 4}
 	});
 
 	var testRectangle = new Rectangle({
@@ -52,6 +57,9 @@ require(['classes/Layer', 'classes/Matrix', 'classes/PointCollection/Line', 'cla
 		origin:		{x: 0, y: 0},
 		terminus:		{x: 5, y: 5}
 	});
+
+	//testSpiral.rotate(15);
+	testLine.absorb(testLine2);
 
 	console.log(testLine);
 	console.log(testRectangle);

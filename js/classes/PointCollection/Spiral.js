@@ -17,7 +17,7 @@ define(['utilities', 'classes/PointCollection/PointCollection', 'classes/Compass
 		var armLength	= 0;					// Tracks current arm length
 		var armPoint	= config.origin;
 
-		this.points.push(armPoint);
+		this.addPoint(armPoint);
 
 		// Gather points as long as we're within the limit
 		while( true ) {
@@ -27,7 +27,7 @@ define(['utilities', 'classes/PointCollection/PointCollection', 'classes/Compass
 
 				armPoint = {x: armPoint.x + coordMod.x, y: armPoint.y + coordMod.y};
 
-				this.points.push(armPoint);
+				this.addPoint(armPoint);
 			}
 
 			armLength++;

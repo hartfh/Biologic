@@ -57,7 +57,7 @@ define(['utilities', 'classes/PointCollection/PointCollection'], function(utilit
 
 				// Check against "types" argument to see if point should be included
 				if( types == offsetPoint.type || types == 'all' ) {
-					this.points.push(offsetPoint);
+					this.addPoint(offsetPoint);
 				}
 			}
 		}

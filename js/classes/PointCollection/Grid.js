@@ -19,7 +19,7 @@ define(['utilities', 'classes/PointCollection/PointCollection'], function(utilit
 
 		for(var j = origin.y; j < terminus.y; j += spacing) {
 			for(var i = origin.x; i < terminus.x; i += spacing) {
-				this.points.push({x: i, y: j});
+				this.addPoint({x: i, y: j});
 			}
 		}
 	}

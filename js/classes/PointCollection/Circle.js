@@ -133,15 +133,8 @@ define(['utilities', 'classes/PointCollection/PointCollection'], function(utilit
 
 			offsetPoint.x = point.x + origin.x;
 			offsetPoint.y = point.y + origin.y;
-			offsetPoint.type = point.type;
 
-			// Any point that touches the grid edge is considered an 'edge' point
-			if( offsetPoint.x == 0 ^ offsetPoint.y == 0 ) {
-				offsetPoint.type = 'edge';
-			}
-			if( shouldIncludePoint(offsetPoint) ) {
-				offsetPoints.push(offsetPoint);
-			}
+			offsetPoints.push(offsetPoint);
 		}
 
 		this.points = offsetPoints;
