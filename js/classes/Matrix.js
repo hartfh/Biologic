@@ -34,61 +34,6 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 		// also possibly one larger circle at center?
 	}
 
-	// TODO: test this
-	// TODO: check if this is bugged when center point has non-integer coordinates
-	/**
-	 * Rotate a collection of points about their center.
-	 *
-	 * @param		{array}	points	Array of points
-	 * @param		{float}	degrees
-	 * @return	{array}
-	 */
-	/*
-	Matrix.prototype.rotatePoints = function(points, degrees) {
-		var newPoints = [];
-
-		// Calculate the point group's center by determing the height/width of the occupied space
-		var maxX = 0;
-		var maxY = 0;
-
-		for(var i in points) {
-			var point = points[i];
-
-			if( point.x > maxX ) {
-				maxX = point.x;
-			}
-			if( point.y > maxY ) {
-				maxY = point.y;
-			}
-		}
-
-		var centerX	= Math.ceil(maxX * 0.5);
-		var centerY	= Math.ceil(maxY * 0.5);
-		var center	= {x: centerX, y: centerY};
-
-		var radians	= degrees * Math.PI / 180;
-
-		// Rotate each point about the center point
-		for( var i in points ) {
-			var point = points[i];
-
-			point.x -= center.x;
-			point.y -= center.y;
-
-			var rotatedX = point.x * Math.cos(radians) - point.y * Math.sin(radians);
-			var rotatedY = point.y * Math.cos(radians) + point.x * Math.sin(radians);
-			var newPoint = {x: Math.floor(rotatedX), y: Math.floor(rotatedY)};
-
-			newPoint.x += center.x;
-			newPoint.y += center.y;
-
-			newPoints.push(newPoint);
-		}
-
-		return newPoints;
-	}
-	*/
-
 	// rotate entire matrix?
 	Matrix.prototype.rotate = function() {
 

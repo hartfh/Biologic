@@ -1,4 +1,4 @@
-require(['classes/Layer', 'classes/Matrix', 'classes/PointCollection/Line', 'classes/PointCollection/Rectangle', 'classes/PointCollection/Circle', 'classes/PointCollection/Spiral', 'classes/PointCollection/Grid'], function(Layer, Matrix, Line, Rectangle, Circle, Spiral, Grid) {
+require(['classes/Layer', 'classes/Matrix', 'classes/Shapes/Line', 'classes/Shapes/Rectangle', 'classes/Shapes/Circle', 'classes/Shapes/Spiral', 'classes/Shapes/Grid'], function(Layer, Matrix, Line, Rectangle, Circle, Spiral, Grid) {
 	var testLayer = new Layer({name: 'primary-layer'});
 
 	/*
@@ -27,8 +27,9 @@ require(['classes/Layer', 'classes/Matrix', 'classes/PointCollection/Line', 'cla
 	*/
 
 	var testLine = new Line({
-		origin:		{x: 1, y: 1},
-		terminus:		{x: 3, y: 3}
+		origin:		{x: 0, y: 0},
+		terminus:		{x: 2, y: 2},
+		random:		0.6
 	});
 
 	var testLine2 = new Line({
@@ -44,7 +45,7 @@ require(['classes/Layer', 'classes/Matrix', 'classes/PointCollection/Line', 'cla
 	var testCircle = new Circle({
 		origin:		{x: 2, y: 2},
 		radius:		3,
-		types:		'edge'
+		type:		'edge'
 	});
 
 	var testSpiral = new Spiral({
@@ -53,13 +54,12 @@ require(['classes/Layer', 'classes/Matrix', 'classes/PointCollection/Line', 'cla
 	});
 
 	var testGrid = new Grid({
-		spacing:		2,
 		origin:		{x: 0, y: 0},
-		terminus:		{x: 5, y: 5}
+		terminus:		{x: 5, y: 5},
+		spacing:		2
 	});
 
-	//testSpiral.rotate(15);
-	testLine.absorb(testLine2);
+	//testLine.rotate(90);
 
 	console.log(testLine);
 	console.log(testRectangle);

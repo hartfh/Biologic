@@ -1,4 +1,4 @@
-define(['utilities', 'classes/PointCollection/PointCollection', 'classes/Compass'], function(utilities, PointCollection, Compass) {
+define(['utilities', 'classes/Shapes/Shape', 'classes/Compass'], function(utilities, Shape, Compass) {
 	/**
 	 * Creates a spiral shape of points.
 	 *
@@ -9,7 +9,7 @@ define(['utilities', 'classes/PointCollection/PointCollection', 'classes/Compass
 		this.parent.init(this, config);
 	};
 
-	Spiral.extend(PointCollection);
+	Spiral.extend(Shape);
 
 	Spiral.prototype.generatePoints = function(config) {
 		var limit		= config.limit || 30;	// Limit on arm length

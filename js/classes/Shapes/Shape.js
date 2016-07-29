@@ -1,10 +1,11 @@
 define([], function() {
-	var PointCollection = function(config) {};
+	var Shape = function(config) {};
 
-	PointCollection.prototype.init = function(self, config) {
+	Shape.prototype.init = function(self, config) {
 		self.points = [];
 
 		self.generatePoints(config);
+		self.randomize(config.random);
 		self.substantiate();
 	}
 
@@ -13,17 +14,18 @@ define([], function() {
 	 *
 	 * @param		{object}	point
 	 */
-	PointCollection.prototype.addPoint = function(point) {
+	Shape.prototype.addPoint = function(point) {
 		this.points.push({x: point.x, y: point.y});
 	}
 
 	/**
-	 * Check if a collection already contains a point.
+	 * Check if a collection contains a point.
 	 *
 	 * @param		{object}		comparePoint
 	 * @return	{boolean}
 	 */
-	PointCollection.prototype.hasPoint = function(comparePoint) {
+	/*
+	Shape.prototype.hasPoint = function(comparePoint) {
 		var result = false;
 
 		this.eachPoint(function(point) {
@@ -36,33 +38,54 @@ define([], function() {
 
 		return result;
 	}
+	*/
 
 	/**
 	 * An abstract method which fills this.points with point objects.
 	 */
-	PointCollection.prototype.generatePoints = function() {}
+	Shape.prototype.generatePoints = function() {}
 
 	/**
-	 * Passes each point to a callback function. Will break the loop if the callback function returns true;
+	 * Passes each point as well as its index to a callback function. Will break the loop if the callback function returns true.
 	 *
 	 * @param		{function}	callback
 	 */
-	PointCollection.prototype.eachPoint = function(callback) {
+	Shape.prototype.eachPoint = function(callback) {
 		for(var i in this.points) {
 			var point		= this.points[i];
 
-			if( callback(point) ) {
+			if( callback(point, i) ) {
 				break;
 			}
 		}
 	}
 
 	/**
+	 * Reduces a collection's points to a randomly chosen subset.
+	 *
+	 * @param		{float}	percent	A float ranging from 0 - 1 that expresses the percentage of a collection's points that should remain
+	 */
+	Shape.prototype.randomize = function(percent) {
+		var percentToKeep	= percent || 1;
+		var randomPoints	= [];
+
+		if( percentToKeep < 1 ) {
+			this.eachPoint(function(point) {
+				if( Math.random() > percentToKeep ) {
+					randomPoints.push(point);
+				}
+			});
+
+			this.points = randomPoints;
+		}
+	}
+
+	/**
 	 * Finds the lowest and highest X- and Y-values within a collection.
 	 *
-	 * @return	{object}
+	 * @return	{object}		Contains "highest" and "lowest" properties, each of which is a point object
 	 */
-	PointCollection.prototype.findExtremes = function() {
+	Shape.prototype.findExtremes = function() {
 		var lowestX	= 0;
 		var lowestY	= 0;
 		var highestX	= 0;
@@ -90,9 +113,9 @@ define([], function() {
 	}
 
 	/**
-	 * Check if a collection has any negative points and elimnate them by translating it.
+	 * Check if a collection has any negative points and if so eliminate them by translating it.
 	 */
-	PointCollection.prototype.substantiate = function() {
+	Shape.prototype.substantiate = function() {
 		var extremes = this.findExtremes();
 
 		// If any points are negative, translate entire collection to eliminate negative values
@@ -107,7 +130,7 @@ define([], function() {
 	 * @param		{integer}		x
 	 * @param		{integer}		y
 	 */
-	PointCollection.prototype.translate = function(x, y) {
+	Shape.prototype.translate = function(x, y) {
 		var x = x || 0;
 		var y = y || 0;
 
@@ -122,7 +145,7 @@ define([], function() {
 	 *
 	 * @param		{float}	degrees
 	 */
-	PointCollection.prototype.rotate = function(degrees) {
+	Shape.prototype.rotate = function(degrees) {
 		var newPoints = [];
 
 		// Calculate the collection's center by determing the height/width of the occupied space
@@ -144,7 +167,7 @@ define([], function() {
 
 			var rotatedX = point.x * Math.cos(radians) - point.y * Math.sin(radians);
 			var rotatedY = point.y * Math.cos(radians) + point.x * Math.sin(radians);
-			var newPoint = {x: Math.floor(rotatedX), y: Math.floor(rotatedY)};
+			var newPoint = {x: Math.round(rotatedX), y: Math.round(rotatedY)};
 
 			newPoint.x += center.x;
 			newPoint.y += center.y;
@@ -156,31 +179,40 @@ define([], function() {
 	}
 
 	/**
-	 * Combine two PointCollection objects into one by combining their points.
+	 * Combine two Shape objects into one by combining their points.
 	 *
 	 * @param		{object}	collection
 	 */
-	PointCollection.prototype.absorb = function(pointCollection) {
+	/*
+	Shape.prototype.absorb = function(Shape) {
 		var self = this;
 
-		pointCollection.eachPoint(function(point) {
+		Shape.eachPoint(function(point) {
 			if( !self.hasPoint(point) ) {
 				self.addPoint(point);
 			}
 		});
 
-		delete pointCollection;
+		delete Shape;
 	}
+	*/
 
 	// mirror or flip. vertically vs horizontally
-	PointCollection.prototype.mirror = function() {
+	Shape.prototype.mirror = function() {
 
 	}
 
 	// Ensure "array" isn't a protected word
-	PointCollection.prototype.array = function() {
+	Shape.prototype.array = function() {
 		// create a circular array of shapes
 	}
 
-	return PointCollection;
+	// need a better way to store point data. Having to scan through entire array every time we need to check for a point is terrible.
+	// think about a graph
+	// maybe need another class that holds points once they've been generated. methods for accesing points, whereas right now the Shape is only good as adding them.
+	// e.g. neighbor-checking methods. or "hasPoint" method
+	// rename current PointCollection class to Shape, and call new class Matrix?
+	// Shape will only include simple shapes, not arrays of shapes. Composite shapes can be generated within new Matrix(?) by gathering up simple shapes based on certain algorithms
+
+	return Shape;
 });

@@ -1,4 +1,4 @@
-define(['utilities', 'classes/PointCollection/PointCollection'], function(utilities, PointCollection) {
+define(['utilities', 'classes/Shapes/Shape'], function(utilities, Shape) {
 	/**
 	 * Create a uniformly spaced grid of points.
 	 *
@@ -10,7 +10,7 @@ define(['utilities', 'classes/PointCollection/PointCollection'], function(utilit
 		this.parent.init(this, config);
 	};
 
-	Grid.extend(PointCollection);
+	Grid.extend(Shape);
 
 	Grid.prototype.generatePoints = function(config) {
 		var spacing	= config.spacing;

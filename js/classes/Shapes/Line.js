@@ -1,4 +1,4 @@
-define(['utilities', 'classes/PointCollection/PointCollection'], function(utilities, PointCollection) {
+define(['utilities', 'classes/Shapes/Shape'], function(utilities, Shape) {
 	/**
 	 * Creates a line shape of points.
 	 *
@@ -9,7 +9,7 @@ define(['utilities', 'classes/PointCollection/PointCollection'], function(utilit
 		this.parent.init(this, config);
 	};
 
-	Line.extend(PointCollection);
+	Line.extend(Shape);
 
 	Line.prototype.generatePoints = function(config) {
 		var origin	= config.origin;

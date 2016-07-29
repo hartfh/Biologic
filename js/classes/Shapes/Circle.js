@@ -1,27 +1,27 @@
-define(['utilities', 'classes/PointCollection/PointCollection'], function(utilities, PointCollection) {
+define(['utilities', 'classes/Shapes/Shape'], function(utilities, Shape) {
 	/**
 	 * Creates a circle shape of points.
 	 *
 	 * @param		{integer}		config.origin	Contains X- and Y-coordinates and marks center of circle
 	 * @param		{integer}		config.radius	Radius of circle
-	 * @param		{string}		config.types	Which point types to return: edge, interior or all
+	 * @param		{string}		config.type	Which point types to return: edge, interior or all
 	 */
 	var Circle = function(config) {
 		this.parent.init(this, config);
 	};
 
-	Circle.extend(PointCollection);
+	Circle.extend(Shape);
 
 	Circle.prototype.generatePoints = function(config) {
-		var types			= config.types || 'all';
+		var type			= config.type || 'all';
 		var points		= [];
 		var offsetPoints	= [];
 		var origin		= config.origin;
 		var radius		= config.radius;
 
-		// Check against "types" argument to see if point should be included
+		// Check against "type" argument to see if point should be included
 		var shouldIncludePoint = function(point) {
-			if( point.type == types || types == 'all' ) {
+			if( point.type == type || type == 'all' ) {
 				return true;
 			}
 
