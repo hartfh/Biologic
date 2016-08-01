@@ -1,31 +1,32 @@
-define(function() {
+define([], function() {
 	var Node = function(config) {
-		this.init(config);
-	};
+		var config = config || {};
 
-	Node.prototype.init = function(config) {
-		this.x = config.x || 0;
-		this.y = config.y || 0;
-		// this.parent??
-		// this.type  (type converts into a color)
-	}
+		var north	= config.north || false;
+		var south = config.south || false;
+		var east	= config.east || false;
+		var west	= config.west || false;
 
-	/**
-	 * Creates a copy of this node.
-	 *
-	 * @return	{object}
-	 */
-	Node.prototype.duplicate = function() {
-		var duplicate	= new Node({});
-		var props		= Object.getOwnPropertyNames(this);
-
-		for(var i in props) {
-			var prop = props[i];
-
-			duplicate[prop] = this[prop];
+		this.getNorth = function() {
+			return north;
 		}
 
-		return duplicate;
+		this.getSouth = function() {
+			return south;
+		}
+
+		this.getEast = function() {
+			return east;
+		}
+
+		this.getWest = function() {
+			return west;
+		}
+	};
+
+	// linkNode
+	Node.prototype.addReference = function() {
+		// create a link to a new node
 	}
 
 	return Node;

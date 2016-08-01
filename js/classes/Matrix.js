@@ -1,4 +1,4 @@
-define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
+define(['classes/NodeOld', 'classes/Compass'], function(NodeOld, Compass) {
 	var Matrix = function(config) {
 		this.init(config);
 	};
@@ -361,7 +361,7 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 		config.x = x;
 		config.y = y;
 
-		var node = new Node(config);
+		var node = new NodeOld(config);
 
 		this.nodes[y][x] = node;
 

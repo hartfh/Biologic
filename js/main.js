@@ -1,4 +1,4 @@
-require(['classes/Layer', 'classes/Matrix', 'classes/Shapes/Line', 'classes/Shapes/Rectangle', 'classes/Shapes/Circle', 'classes/Shapes/Spiral', 'classes/Shapes/Grid'], function(Layer, Matrix, Line, Rectangle, Circle, Spiral, Grid) {
+require(['classes/Layer', 'classes/Grid', 'classes/Matrix', 'classes/Shapes/Line', 'classes/Shapes/Rectangle', 'classes/Shapes/Circle', 'classes/Shapes/Spiral', 'classes/Shapes/Field'], function(Layer, Grid, Matrix, Line, Rectangle, Circle, Spiral, Field) {
 	var testLayer = new Layer({name: 'primary-layer'});
 
 	/*
@@ -53,7 +53,7 @@ require(['classes/Layer', 'classes/Matrix', 'classes/Shapes/Line', 'classes/Shap
 		limit:		6
 	});
 
-	var testGrid = new Grid({
+	var testField = new Field({
 		origin:		{x: 0, y: 0},
 		terminus:		{x: 5, y: 5},
 		spacing:		2
@@ -61,9 +61,14 @@ require(['classes/Layer', 'classes/Matrix', 'classes/Shapes/Line', 'classes/Shap
 
 	//testLine.rotate(90);
 
+	var testGrid = new Grid({width: 5, height: 4});
+	var aNode = testGrid.getNode(2, 2);
+	console.log(aNode);
+
+	console.log(testGrid);
 	console.log(testLine);
 	console.log(testRectangle);
 	console.log(testCircle);
 	console.log(testSpiral);
-	console.log(testGrid);
+	console.log(testField);
 });
