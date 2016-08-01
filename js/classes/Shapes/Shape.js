@@ -10,7 +10,7 @@ define([], function() {
 	}
 
 	/**
-	 * Loads a point into a collection.
+	 * Loads a point into a shape.
 	 *
 	 * @param		{object}	point
 	 */
@@ -19,34 +19,12 @@ define([], function() {
 	}
 
 	/**
-	 * Check if a collection contains a point.
-	 *
-	 * @param		{object}		comparePoint
-	 * @return	{boolean}
-	 */
-	/*
-	Shape.prototype.hasPoint = function(comparePoint) {
-		var result = false;
-
-		this.eachPoint(function(point) {
-			if( point.x == comparePoint.x && point.y == comparePoint.y ) {
-				result = true;
-
-				return true;
-			}
-		});
-
-		return result;
-	}
-	*/
-
-	/**
-	 * An abstract method which fills this.points with point objects.
+	 * Abstract method which adds points to this shape.
 	 */
 	Shape.prototype.generatePoints = function() {}
 
 	/**
-	 * Passes each point as well as its index to a callback function. Will break the loop if the callback function returns true.
+	 * Passes each point as well as its index to a callback function. Will exit the loop if the callback function returns true.
 	 *
 	 * @param		{function}	callback
 	 */
@@ -61,9 +39,9 @@ define([], function() {
 	}
 
 	/**
-	 * Reduces a collection's points to a randomly chosen subset.
+	 * Reduces a shape's points to a randomly chosen subset.
 	 *
-	 * @param		{float}	percent	A float ranging from 0 - 1 that expresses the percentage of a collection's points that should remain
+	 * @param		{float}	percent	A float ranging from 0 - 1 that expresses the percentage of a shape's points that should remain
 	 */
 	Shape.prototype.randomize = function(percent) {
 		var percentToKeep	= percent || 1;
@@ -81,7 +59,7 @@ define([], function() {
 	}
 
 	/**
-	 * Finds the lowest and highest X- and Y-values within a collection.
+	 * Finds the lowest and highest X- and Y-values within a shape.
 	 *
 	 * @return	{object}		Contains "highest" and "lowest" properties, each of which is a point object
 	 */
@@ -113,7 +91,7 @@ define([], function() {
 	}
 
 	/**
-	 * Check if a collection has any negative points and if so eliminate them by translating it.
+	 * Check if a shape has any negative points and if so eliminate them by translating it.
 	 */
 	Shape.prototype.substantiate = function() {
 		var extremes = this.findExtremes();
@@ -148,7 +126,7 @@ define([], function() {
 	Shape.prototype.rotate = function(degrees) {
 		var newPoints = [];
 
-		// Calculate the collection's center by determing the height/width of the occupied space
+		// Calculate the shape's center by determing the height/width of the occupied space
 		var extremes	= this.findExtremes();
 
 		var width		= extremes.highest.x - extremes.lowest.x;
@@ -177,25 +155,6 @@ define([], function() {
 
 		this.points = newPoints;
 	}
-
-	/**
-	 * Combine two Shape objects into one by combining their points.
-	 *
-	 * @param		{object}	collection
-	 */
-	/*
-	Shape.prototype.absorb = function(Shape) {
-		var self = this;
-
-		Shape.eachPoint(function(point) {
-			if( !self.hasPoint(point) ) {
-				self.addPoint(point);
-			}
-		});
-
-		delete Shape;
-	}
-	*/
 
 	// mirror or flip. vertically vs horizontally
 	Shape.prototype.mirror = function() {
