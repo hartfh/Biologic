@@ -63,9 +63,14 @@ require(['classes/Layer', 'classes/Grid', 'classes/Matrix', 'classes/Shapes/Line
 
 	var testGrid = new Grid({width: 5, height: 4});
 	testGrid.addNode(2, 2);
-	testGrid.addNode(3, 2);
 	testGrid.addNode(2, 3);
+	testGrid.addNode(3, 2);
 	testGrid.addNode(3, 3);
+
+	testGrid.removeNode(3, 3);
+
+	var testNode = testGrid.getNode(3, 2);
+	console.log(testNode.getLink('south'));
 
 
 	var node = testGrid.getNode(2, 2);

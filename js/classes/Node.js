@@ -54,7 +54,22 @@ define([], function() {
 		}
 
 		this.removeLink = function(direction) {
-
+			switch(direction) {
+				case 'north':
+					north = false;
+					break;
+				case 'south':
+					south = false;
+					break;
+				case 'east':
+					east = false;
+					break;
+				case 'west':
+					west = false;
+					break;
+				default:
+					break;
+			}
 		}
 
 		/**

@@ -60,20 +60,20 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 			if( node ) {
 				// Remove other nodes' reference to this one
 				for(var i = 0; i < 4; i++) {
-					var dirData	= Compass.getState();
+					var dirData	= compass.getState();
 					var direction	= dirData.label;
 					var linkedNode	= node.getLink(direction);
 
-					Compass.rotate().rotate();
+					compass.rotate().rotate();
 
-					var oppDirData		= Compass.getState();
+					var oppDirData		= compass.getState();
 					var oppDirection	= oppDirData.label;
 
 					if( linkedNode ) {
 						linkedNode.removeLink(oppDirection);
 					}
 
-					Compass.rotate();
+					compass.rotate();
 				}
 
 				// Destroy this node
