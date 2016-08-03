@@ -5,32 +5,28 @@ define(function() {
 	var Compass = function(width) {
 		this.state	= 0;
 		this.width	= width || 1;
-		this.key		= ['N', 'E', 'S', 'W'];
+		this.key		= ['north', 'east', 'south', 'west'];
 		this.states	= [
 			{
-				direction:	'N',
-				label:		'north',
+				direction:	'north',
 				coordinates:	{x: 0, y: -1},
 				cornerA:		{x: 0, y: 0},
 				cornerB:		{x: this.width - 1, y: 0}
 			},
 			{
-				direction:	'E',
-				label:		'east',
+				direction:	'east',
 				coordinates:	{x: 1, y: 0},
 				cornerA:		{x: this.width - 1, y: 0},
 				cornerB:		{x: this.width - 1, y: this.width - 1}
 			},
 			{
-				direction:	'S',
-				label:		'south',
+				direction:	'south',
 				coordinates:	{x: 0, y: 1},
 				cornerA:		{x: this.width - 1, y: this.width - 1},
 				cornerB:		{x: 0, y: this.width - 1}
 			},
 			{
-				direction:	'W',
-				label:		'west',
+				direction:	'west',
 				coordinates:	{x: -1, y: 0},
 				cornerA:		{x: 0, y: this.width - 1},
 				cornerB:		{x: 0, y: 0}

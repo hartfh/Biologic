@@ -1,26 +1,45 @@
-define([], function() {
+define(['classes/Compass'], function(Compass) {
+	/**
+	 * Represents points on a grid within a Grid object. Acts as a node in a graph (quadrupally linked list).
+	 *
+	 * @param		{object}	config		Configuration object
+	 * @param		{object}	config.north	A node object to link in the "north" position
+	 * @param		{object}	config.south	A node object to link in the "south" position
+	 * @param		{object}	config.east	A node object to link in the "east" position
+	 * @param		{object}	config.west	A node object to link in the "west" position
+	 */
 	var Node = function(config) {
 		var config = config || {};
 
-		var north	= config.north || false;
-		var south = config.south || false;
-		var east	= config.east || false;
-		var west	= config.west || false;
+		// Properties are stored as private variables
+		var north		= config.north || false;
+		var south		= config.south || false;
+		var east		= config.east || false;
+		var west		= config.west || false;
+		var contents	= {};
 
-		this.getNorth = function() {
-			return north;
+		this.addContent = function(object, handle) {
+			if( !contents.hasOwnProperty(handle) ) {
+				contents[handle] = object;
+			}
 		}
 
-		this.getSouth = function() {
-			return south;
+		this.removeContent = function(handle) {
+			if( contents.hasOwnProperty(handle) ) {
+				delete contents[handle];
+			}
 		}
 
-		this.getEast = function() {
-			return east;
+		this.getContent = function(handle) {
+			if( contents.hasOwnProperty(handle) ) {
+				return contents[handle];
+			}
+
+			return false;
 		}
 
-		this.getWest = function() {
-			return west;
+		this.getContents = function() {
+			return contents;
 		}
 
 		/**
@@ -53,6 +72,11 @@ define([], function() {
 			return node;
 		}
 
+		/**
+		 * Remove one of this node's links to another node.
+		 *
+		 * @param		{string}	direction
+		 */
 		this.removeLink = function(direction) {
 			switch(direction) {
 				case 'north':
@@ -73,7 +97,7 @@ define([], function() {
 		}
 
 		/**
-		 * Create a link from this node to to another one.
+		 * Create a link from this node to another node.
 		 *
 		 * @param		{string}	direction
 		 * @param		{object}	node
@@ -94,6 +118,26 @@ define([], function() {
 					break;
 				default:
 					break;
+			}
+		}
+
+		/**
+		 * Passes each linked node to a callback function.
+		 *
+		 * @param		{function}	callback
+		 */
+		this.eachLink = function(callback) {
+			var compass = new Compass();
+
+			for(var i = 0; i < 4; i++) {
+				var state	= compass.getState();
+				var node	= this.getLink(state.direction);
+
+				if( node ) {
+					callback(node);
+				}
+
+				compass.rotate();
 			}
 		}
 	};

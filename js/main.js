@@ -34,7 +34,7 @@ require(['classes/Layer', 'classes/Grid', 'classes/Matrix', 'classes/Shapes/Line
 
 	var testLine2 = new Line({
 		origin:		{x: 3, y: 3},
-		terminus:		{x: 4, y: 4}
+		terminus:		{x: 6, y: 6}
 	});
 
 	var testRectangle = new Rectangle({
@@ -61,22 +61,14 @@ require(['classes/Layer', 'classes/Grid', 'classes/Matrix', 'classes/Shapes/Line
 
 	//testLine.rotate(90);
 
-	var testGrid = new Grid({width: 5, height: 4});
-	testGrid.addNode(2, 2);
-	testGrid.addNode(2, 3);
-	testGrid.addNode(3, 2);
-	testGrid.addNode(3, 3);
-
-	testGrid.removeNode(3, 3);
-
-	var testNode = testGrid.getNode(3, 2);
-	console.log(testNode.getLink('south'));
-
-
-	var node = testGrid.getNode(2, 2);
-	//console.log( node.getEast() );
+	var testGrid = new Grid({width: 6, height: 6});
 
 	console.log(testGrid);
+	var node = testGrid.getNode(4, 4);
+	node.addContent({a: '222'}, 'testing');
+	console.log( node.getContent('testing') );
+
+
 	console.log(testLine);
 	console.log(testRectangle);
 	console.log(testCircle);
