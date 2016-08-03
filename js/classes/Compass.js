@@ -9,24 +9,28 @@ define(function() {
 		this.states	= [
 			{
 				direction:	'N',
+				label:		'north',
 				coordinates:	{x: 0, y: -1},
 				cornerA:		{x: 0, y: 0},
 				cornerB:		{x: this.width - 1, y: 0}
 			},
 			{
 				direction:	'E',
+				label:		'east',
 				coordinates:	{x: 1, y: 0},
 				cornerA:		{x: this.width - 1, y: 0},
 				cornerB:		{x: this.width - 1, y: this.width - 1}
 			},
 			{
 				direction:	'S',
+				label:		'south',
 				coordinates:	{x: 0, y: 1},
 				cornerA:		{x: this.width - 1, y: this.width - 1},
 				cornerB:		{x: 0, y: this.width - 1}
 			},
 			{
 				direction:	'W',
+				label:		'west',
 				coordinates:	{x: -1, y: 0},
 				cornerA:		{x: 0, y: this.width - 1},
 				cornerB:		{x: 0, y: 0}

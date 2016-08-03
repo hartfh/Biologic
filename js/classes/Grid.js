@@ -1,4 +1,4 @@
-define(['classes/Node'], function(Node) {
+define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 	// Represents a 2-d grid of points using a graph data structure
 	var Grid = function(config) {
 		this.width	= config.width || 0;
@@ -37,6 +37,13 @@ define(['classes/Node'], function(Node) {
 		return true;
 	}
 
+	/**
+	 * Get the node at the provided coordinates. Returns false if the coordinates refer to an empty position.
+	 *
+	 * @param		{integer}		x
+	 * @param		{integer}		y
+	 * @return	{object}
+	 */
 	Grid.prototype.getNode = function(x, y) {
 		if( this.withinBounds(x, y) ) {
 			return this.nodes[y][x];
@@ -45,7 +52,37 @@ define(['classes/Node'], function(Node) {
 		return false;
 	}
 
-	Grid.prototype.addNode = function() {
+	Grid.prototype.removeNode = function(x, y) {
+		if( this.withinBounds(x, y) ) {
+			var node		= this.getNode(x, y);
+			var compass	= new Compass();
+
+			if( node ) {
+				// Remove other nodes' reference to this one
+				for(var i = 0; i < 4; i++) {
+					var dirData	= Compass.getState();
+					var direction	= dirData.label;
+					var linkedNode	= node.getLink(direction);
+
+					Compass.rotate().rotate();
+
+					var oppDirData		= Compass.getState();
+					var oppDirection	= oppDirData.label;
+
+					if( linkedNode ) {
+						linkedNode.removeLink(oppDirection);
+					}
+
+					Compass.rotate();
+				}
+
+				// Destroy this node
+				this.nodes[y][x] = false;
+			}
+		}
+	}
+
+	Grid.prototype.addNode = function(x, y) {
 		// TODO: check if node already exists?
 		// TODO: destroy old node and destroy links to it
 
@@ -65,8 +102,11 @@ define(['classes/Node'], function(Node) {
 
 		this.nodes[y][x] = node;
 
-		// get adjacent nodes and link them to the new one
-		if( north ) { north.linkNode(dir, node); }
+		// Get adjacent nodes and link them to the new one
+		if( north ) { north.addLink('south', node); }
+		if( south ) { south.addLink('north', node); }
+		if( east ) { east.addLink('west', node); }
+		if( west ) { west.addLink('east', node); }
 	}
 
 	return Grid;

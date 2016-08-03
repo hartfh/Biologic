@@ -22,12 +22,66 @@ define([], function() {
 		this.getWest = function() {
 			return west;
 		}
-	};
 
-	// linkNode
-	Node.prototype.addReference = function() {
-		// create a link to a new node
-	}
+		/**
+		 * Get the node at a provided link.
+		 *
+		 * @param		{string}	direction
+		 * @return	{object}	node
+		 */
+		this.getLink = function(direction) {
+			var node;
+
+			switch(direction) {
+				case 'north':
+					node = north;
+					break;
+				case 'south':
+					node = south;
+					break;
+				case 'east':
+					node = east;
+					break;
+				case 'west':
+					node = west;
+					break;
+				default:
+					node = false;
+					break;
+			}
+
+			return node;
+		}
+
+		this.removeLink = function(direction) {
+
+		}
+
+		/**
+		 * Create a link from this node to to another one.
+		 *
+		 * @param		{string}	direction
+		 * @param		{object}	node
+		 */
+		this.addLink = function(direction, node) {
+			switch(direction) {
+				case 'north':
+					north = node;
+					break;
+				case 'south':
+					south = node;
+					break;
+				case 'east':
+					east = node;
+					break;
+				case 'west':
+					west = node;
+					break;
+				default:
+					break;
+			}
+		}
+	};
 
 	return Node;
 });

@@ -62,8 +62,14 @@ require(['classes/Layer', 'classes/Grid', 'classes/Matrix', 'classes/Shapes/Line
 	//testLine.rotate(90);
 
 	var testGrid = new Grid({width: 5, height: 4});
-	var aNode = testGrid.getNode(2, 2);
-	console.log(aNode);
+	testGrid.addNode(2, 2);
+	testGrid.addNode(3, 2);
+	testGrid.addNode(2, 3);
+	testGrid.addNode(3, 3);
+
+
+	var node = testGrid.getNode(2, 2);
+	//console.log( node.getEast() );
 
 	console.log(testGrid);
 	console.log(testLine);
