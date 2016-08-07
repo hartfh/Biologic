@@ -1,4 +1,4 @@
-define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
+define(['constants', 'classes/Node', 'classes/Compass'], function(constants, Node, Compass) {
 	/**
 	 * Represents a 2-dimensional grid of points using a graph data structure.
 	 *
@@ -9,13 +9,15 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 	var Grid = function(config) {
 		this.width	= config.width || 0;
 		this.height	= config.height || 0;
+		this.name		= config.name;
 		this.nodes	= [];
+		this.ctx;
 
 		for(var j = 0; j < this.width; j++) {
 			var column = [];
 
 			for(var i = 0; i < this.height; i++) {
-				column.push( new Node({}) );
+				column.push( new Node() );
 			}
 
 			this.nodes.push(column);
@@ -26,6 +28,39 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 				this.addNode(i, j);
 			}
 		}
+
+		constants.$app.append('<canvas id="' + config.name + '" width="1000" height="500" />');
+		var elem	= document.getElementById(config.name);
+		this.ctx	= elem.getContext('2d');
+	}
+
+	/**
+	 * Clears all nodes from the drawing area.
+	 */
+	Grid.prototype.clear = function() {
+		var endX = this.width * constants.nodeWidth;
+		var endY = this.height * constants.nodeWidth;
+
+		this.ctx.clearRect(0, 0, endX, endY);
+	}
+
+	/**
+	 * Draws all nodes to the drawing area.
+	 */
+	Grid.prototype.draw = function() {
+		this.clear();
+
+		var self		= this;
+		var nodeWidth	= constants.nodeWidth;
+		this.ctx.fillStyle = 'rgba(105, 105, 200, 1)';
+
+
+		this.eachNode(function(node, x, y) {
+			var nodeStartX = x * nodeWidth;
+			var nodeStartY = y * nodeWidth;
+
+			self.ctx.fillRect(nodeStartX, nodeStartY, nodeWidth, nodeWidth);
+		});
 	}
 
 	// do something to nodes in a Shape's points
@@ -128,6 +163,18 @@ define(['classes/Node', 'classes/Compass'], function(Node, Compass) {
 
 				// Destroy this node
 				this.nodes[y][x] = false;
+			}
+		}
+	}
+
+	Grid.prototype.eachNode = function(callback) {
+		for(var y in this.nodes) {
+			var column = this.nodes[y];
+
+			for(var x in column) {
+				var node = column[x];
+
+				callback(node, x, y);
 			}
 		}
 	}

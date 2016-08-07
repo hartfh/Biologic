@@ -1,7 +1,7 @@
 define(function() {
 	var constants = {
 		$app:		jQuery('#app-container'),
-		tilePxWidth:	20
+		nodeWidth:	20
 	}
 
 	return constants;
