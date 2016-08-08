@@ -43,14 +43,14 @@ require(['classes/Grid', 'classes/Matrix', 'classes/Shapes/Line', 'classes/Shape
 	});
 
 	var testCircle = new Circle({
-		origin:		{x: 2, y: 2},
-		radius:		3,
+		origin:		{x: 8, y: 8},
+		radius:		8,
 		type:		'edge'
 	});
 
 	var testSpiral = new Spiral({
-		origin:		{x: 1, y: 1},
-		limit:		6
+		origin:		{x: 8, y: 8},
+		limit:		14
 	});
 
 	var testField = new Field({
@@ -61,12 +61,11 @@ require(['classes/Grid', 'classes/Matrix', 'classes/Shapes/Line', 'classes/Shape
 
 	//testLine.rotate(90);
 
-	var testGrid = new Grid({width: 6, height: 6, name: 'grid-1'});
+	var testGrid = new Grid({width: 20, height: 20, name: 'grid-1'});
 
-	console.log(testGrid);
-	var node = testGrid.getNode(4, 4);
-	node.addContent({a: '222'}, 'testing');
-	console.log( node.getContent('testing') );
+	testGrid.toNodes(testSpiral, function(node) {
+		//node.updateContent('color', 'red');
+	});
 
 
 	console.log(testLine);

@@ -1,4 +1,4 @@
-define(['constants', 'classes/Node', 'classes/Compass'], function(constants, Node, Compass) {
+define(['constants', 'classes/Cell', 'classes/Compass'], function(constants, Cell, Compass) {
 	/**
 	 * Represents a 2-dimensional grid of points using a graph data structure.
 	 *
@@ -17,7 +17,7 @@ define(['constants', 'classes/Node', 'classes/Compass'], function(constants, Nod
 			var column = [];
 
 			for(var i = 0; i < this.height; i++) {
-				column.push( new Node() );
+				column.push( new Cell() );
 			}
 
 			this.nodes.push(column);
@@ -52,20 +52,43 @@ define(['constants', 'classes/Node', 'classes/Compass'], function(constants, Nod
 
 		var self		= this;
 		var nodeWidth	= constants.nodeWidth;
-		this.ctx.fillStyle = 'rgba(105, 105, 200, 1)';
-
 
 		this.eachNode(function(node, x, y) {
 			var nodeStartX = x * nodeWidth;
 			var nodeStartY = y * nodeWidth;
 
+			var swatch = 'rgba(135, 135, 200, 1)';
+
+			/*
+			var color = node.getContent('color');
+
+			if( color == 'red' ) {
+				swatch = 'rgba(109, 0, 9, 1)';
+			}
+			*/
+
+			self.ctx.fillStyle = swatch;
 			self.ctx.fillRect(nodeStartX, nodeStartY, nodeWidth, nodeWidth);
 		});
 	}
 
-	// do something to nodes in a Shape's points
-	Grid.prototype.withShape = function(shape, callback) {}
-	Grid.prototype.toNodes = function(shape, callback) {}
+
+	/**
+	 * Passes each node at a Shape object's coordinates to a callback function.
+	 *
+	 * @param		{object}		shape		Shape object
+	 * @param		{function}	callback		Callback function
+	 */
+	Grid.prototype.toNodes = function(shape, callback) {
+		var coords = shape.points;
+
+		for(var i in coords) {
+			var coord	= coords[i];
+			var node	= this.getNode(coord.x, coord.y);
+
+			callback(node);
+		}
+	}
 
 	/**
 	 * Checks if an X- and Y-coordinate are within this object's dimensions.
@@ -119,7 +142,9 @@ define(['constants', 'classes/Node', 'classes/Compass'], function(constants, Nod
 			west:	west
 		};
 
-		var node = new Node(args);
+		var node = new Cell(args);
+
+		//node.addContent('color', 'blue');
 
 		this.nodes[y][x] = node;
 

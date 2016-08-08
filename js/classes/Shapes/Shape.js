@@ -166,12 +166,5 @@ define([], function() {
 		// create a circular array of shapes
 	}
 
-	// need a better way to store point data. Having to scan through entire array every time we need to check for a point is terrible.
-	// think about a graph
-	// maybe need another class that holds points once they've been generated. methods for accesing points, whereas right now the Shape is only good as adding them.
-	// e.g. neighbor-checking methods. or "hasPoint" method
-	// rename current PointCollection class to Shape, and call new class Matrix?
-	// Shape will only include simple shapes, not arrays of shapes. Composite shapes can be generated within new Matrix(?) by gathering up simple shapes based on certain algorithms
-
 	return Shape;
 });
