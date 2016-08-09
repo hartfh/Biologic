@@ -1,4 +1,4 @@
-define(['classes/Compass'], function(Compass) {
+define(['compass'], function(Compass) {
 	/**
 	 * Represents points on a grid within a Grid object. Acts as a node in a graph (4-way linked list).
 	 *

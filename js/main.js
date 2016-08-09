@@ -1,4 +1,23 @@
-require(['classes/Grid', 'classes/Matrix', 'classes/Shapes/Line', 'classes/Shapes/Rectangle', 'classes/Shapes/Circle', 'classes/Shapes/Spiral', 'classes/Shapes/Field'], function(Grid, Matrix, Line, Rectangle, Circle, Spiral, Field) {
+require.config({
+	//baseUrl:	'',
+	paths: {
+		'utilities':		'utilities',
+		'constants':		'constants',
+		'grid':			'classes/Grid',
+		'node':			'classes/Node',
+		'cell':			'classes/Cell',
+		'compass':		'classes/Compass',
+		'shape':			'classes/Shapes/Shape',
+		'compositeShape':	'classes/Shapes/CompositeShape',
+		'line':			'classes/Shapes/Simple/Line',
+		'rectangle':		'classes/Shapes/Simple/Rectangle',
+		'circle':			'classes/Shapes/Simple/Circle',
+		'spiral':			'classes/Shapes/Simple/Spiral',
+		'field':			'classes/Shapes/Simple/Field'
+	}
+});
+
+require(['grid', 'line', 'rectangle', 'circle', 'spiral', 'field', 'compositeShape'], function(Grid, Line, Rectangle, Circle, Spiral, Field, CompositeShape) {
 	//var testLayer = new Layer({name: 'primary-layer'});
 
 	/*

@@ -1,4 +1,4 @@
-define(['classes/NodeOld', 'classes/Compass'], function(NodeOld, Compass) {
+define(['classes/NodeOld', 'compass'], function(NodeOld, Compass) {
 	var Matrix = function(config) {
 		this.init(config);
 	};

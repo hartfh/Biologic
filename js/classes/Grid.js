@@ -1,4 +1,4 @@
-define(['constants', 'classes/Cell', 'classes/Compass'], function(constants, Cell, Compass) {
+define(['constants', 'cell', 'compass'], function(constants, Cell, Compass) {
 	/**
 	 * Represents a 2-dimensional grid of points using a graph data structure.
 	 *

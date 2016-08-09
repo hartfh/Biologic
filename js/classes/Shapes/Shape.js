@@ -1,4 +1,4 @@
-define([], function() {
+define(function() {
 	var Shape = function(config) {};
 
 	Shape.prototype.init = function(self, config) {
