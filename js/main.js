@@ -47,8 +47,7 @@ require(['grid', 'line', 'rectangle', 'circle', 'spiral', 'field', 'compositeSha
 
 	var testLine = new Line({
 		origin:		{x: 0, y: 0},
-		terminus:		{x: 2, y: 2},
-		random:		0.6
+		terminus:		{x: 2, y: 2}
 	});
 
 	var testLine2 = new Line({

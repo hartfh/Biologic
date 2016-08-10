@@ -12,6 +12,12 @@ define(['node'], function(Node) {
 		//this.lifespan?
 	}
 
+	//Cell.prototype.grow = function() {}
+
+	//Cell.prototype.replicate = function() {}
+
+	//Cell.prototype.expand = function(dir?) {}
+
 	// various seed types. seed causes cell to expand out according to various guidelines (utilizing shapes, somehow)
 
 	return Cell;

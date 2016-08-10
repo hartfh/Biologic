@@ -5,7 +5,7 @@ define(function() {
 		self.points = [];
 
 		self.generatePoints(config);
-		self.randomize(config.random);
+		//self.randomize(config.random);
 		self.substantiate();
 	}
 
@@ -30,7 +30,7 @@ define(function() {
 	 */
 	Shape.prototype.eachPoint = function(callback) {
 		for(var i in this.points) {
-			var point		= this.points[i];
+			var point	= this.points[i];
 
 			if( callback(point, i) ) {
 				break;
@@ -43,6 +43,7 @@ define(function() {
 	 *
 	 * @param		{float}	percent	A float ranging from 0 - 1 that expresses the percentage of a shape's points that should remain
 	 */
+	/*
 	Shape.prototype.randomize = function(percent) {
 		var percentToKeep	= percent || 1;
 		var randomPoints	= [];
@@ -57,6 +58,7 @@ define(function() {
 			this.points = randomPoints;
 		}
 	}
+	*/
 
 	/**
 	 * Finds the lowest and highest X- and Y-values within a shape.
@@ -118,6 +120,7 @@ define(function() {
 		});
 	}
 
+	// TODO: possibly bugged on shapes with an even width
 	/**
 	 * Rotates all points about their calculated center.
 	 *
@@ -156,14 +159,28 @@ define(function() {
 		this.points = newPoints;
 	}
 
-	// mirror or flip. vertically vs horizontally
-	Shape.prototype.mirror = function() {
+	// TODO: possibly bugged on shapes with an even height
+	Shape.prototype.flipY = function() {
+		var extremes	= this.findExtremes();
+		var centerY	= extremes.highest.y * 0.5;
 
+		this.eachPoint(function(point, index) {
+			var diff = point.y - centerY;
+
+			point.y = centerY - diff;
+		});
 	}
 
-	// Ensure "array" isn't a protected word
-	Shape.prototype.array = function() {
-		// create a circular array of shapes
+	// TODO: possibly bugged on shapes with an even width
+	Shape.prototype.flipX = function() {
+		var extremes	= this.findExtremes();
+		var centerX	= extremes.highest.x * 0.5;
+
+		this.eachPoint(function(point, index) {
+			var diff = point.x - centerX;
+
+			point.x = centerX - diff;
+		});
 	}
 
 	return Shape;

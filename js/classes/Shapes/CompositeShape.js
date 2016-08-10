@@ -1,4 +1,4 @@
-define(['shape'], function(Shape) {
+define(['utilities', 'shape'], function(utilites, Shape) {
 	var CompositeShape = function(config) {
 		this.init(config || {});
 	}
@@ -11,9 +11,11 @@ define(['shape'], function(Shape) {
 		// additions
 	}
 
-	CompositeShape.prototype.generatePoints = function(config) {}
+	// CompositeShape.prototype.array = function() {}
 
-	// composite shape methods and algorithms
+	// gather simple shapes
+	// rotate or flip some
+	// combine
 
 	return CompositeShape;
 });
