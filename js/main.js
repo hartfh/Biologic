@@ -13,11 +13,12 @@ require.config({
 		'rectangle':		'classes/Shapes/Simple/Rectangle',
 		'circle':			'classes/Shapes/Simple/Circle',
 		'spiral':			'classes/Shapes/Simple/Spiral',
-		'field':			'classes/Shapes/Simple/Field'
+		'field':			'classes/Shapes/Simple/Field',
+		'blob':			'classes/Shapes/Composite/Blob'
 	}
 });
 
-require(['grid', 'line', 'rectangle', 'circle', 'spiral', 'field', 'compositeShape'], function(Grid, Line, Rectangle, Circle, Spiral, Field, CompositeShape) {
+require(['utilities', 'grid', 'line', 'rectangle', 'circle', 'spiral', 'field', 'blob'], function(utilities, Grid, Line, Rectangle, Circle, Spiral, Field, Blob) {
 	//var testLayer = new Layer({name: 'primary-layer'});
 
 	/*
@@ -77,6 +78,10 @@ require(['grid', 'line', 'rectangle', 'circle', 'spiral', 'field', 'compositeSha
 		spacing:		2
 	});
 
+	var testBlob = new Blob({
+
+	});
+
 	//testLine.rotate(90);
 
 	var testGrid = new Grid({width: 20, height: 20, name: 'grid-1'});
@@ -91,6 +96,7 @@ require(['grid', 'line', 'rectangle', 'circle', 'spiral', 'field', 'compositeSha
 	console.log(testCircle);
 	console.log(testSpiral);
 	console.log(testField);
+	console.log(testBlob);
 
 	testGrid.draw();
 });

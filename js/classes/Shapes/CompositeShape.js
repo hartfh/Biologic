@@ -1,4 +1,4 @@
-define(['utilities', 'shape'], function(utilites, Shape) {
+define(['shape'], function(Shape) {
 	var CompositeShape = function(config) {
 		this.init(config || {});
 	}

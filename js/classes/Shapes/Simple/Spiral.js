@@ -1,4 +1,4 @@
-define(['utilities', 'shape', 'compass'], function(utilities, Shape, Compass) {
+define(['shape', 'compass'], function(Shape, Compass) {
 	/**
 	 * Creates a spiral shape of points.
 	 *

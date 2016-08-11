@@ -1,4 +1,4 @@
-define(['utilities', 'shape'], function(utilities, Shape) {
+define(['shape'], function(Shape) {
 	/**
 	 * Creates a circle shape of points.
 	 *

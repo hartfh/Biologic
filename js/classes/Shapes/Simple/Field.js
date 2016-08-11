@@ -1,4 +1,4 @@
-define(['utilities', 'shape'], function(utilities, Shape) {
+define(['shape'], function(Shape) {
 	/**
 	 * Create a uniformly spaced grid of points.
 	 *
