@@ -1,24 +1,25 @@
 require.config({
 	//baseUrl:	'',
 	paths: {
-		'utilities':		'utilities',
-		'constants':		'constants',
-		'grid':			'classes/Grid',
-		'node':			'classes/Node',
-		'cell':			'classes/Cell',
-		'compass':		'classes/Compass',
-		'shape':			'classes/Shapes/Shape',
-		'compositeShape':	'classes/Shapes/CompositeShape',
-		'line':			'classes/Shapes/Simple/Line',
-		'rectangle':		'classes/Shapes/Simple/Rectangle',
-		'circle':			'classes/Shapes/Simple/Circle',
-		'spiral':			'classes/Shapes/Simple/Spiral',
-		'field':			'classes/Shapes/Simple/Field',
-		'blob':			'classes/Shapes/Composite/Blob'
+		'utilities':			'utilities',
+		'constants':			'constants',
+		'grid':				'classes/Grid',
+		'node':				'classes/Node',
+		'cell':				'classes/Cell',
+		'compass':			'classes/Compass',
+		'shape':				'classes/Shapes/Shape',
+		'line':				'classes/Shapes/Line',
+		'rectangle':			'classes/Shapes/Rectangle',
+		'circle':				'classes/Shapes/Circle',
+		'spiral':				'classes/Shapes/Spiral',
+		'ordered-field':		'classes/Shapes/OrderedField',
+		'polar-array':			'classes/Shapes/PolarArray',
+		'rectangular-array':	'classes/Shapes/RectangularArray',
+		'blob':				'classes/Shapes/Blob',
 	}
 });
 
-require(['utilities', 'grid', 'line', 'rectangle', 'circle', 'spiral', 'field', 'blob'], function(utilities, Grid, Line, Rectangle, Circle, Spiral, Field, Blob) {
+require(['utilities', 'grid', 'line', 'rectangle', 'circle', 'spiral', 'ordered-field', 'polar-array', 'rectangular-array', 'blob'], function(utilities, Grid, Line, Rectangle, Circle, Spiral, OrderedField, PolarArray, RectangularArray, Blob) {
 	//var testLayer = new Layer({name: 'primary-layer'});
 
 	/*
@@ -62,9 +63,10 @@ require(['utilities', 'grid', 'line', 'rectangle', 'circle', 'spiral', 'field', 
 	});
 
 	var testCircle = new Circle({
-		origin:		{x: 8, y: 8},
+		//origin:		{x: 8, y: 8},
 		radius:		8,
-		type:		'edge'
+		type:		'edge',
+		density:		50
 	});
 
 	var testSpiral = new Spiral({
@@ -72,13 +74,21 @@ require(['utilities', 'grid', 'line', 'rectangle', 'circle', 'spiral', 'field', 
 		limit:		14
 	});
 
-	var testField = new Field({
+	var testOrderedField = new OrderedField({
 		origin:		{x: 0, y: 0},
 		terminus:		{x: 5, y: 5},
 		spacing:		2
 	});
 
 	var testBlob = new Blob({
+
+	});
+
+	var testPolarArray = new PolarArray({
+
+	});
+
+	var testRectangularArray = new RectangularArray({
 
 	});
 
@@ -95,8 +105,10 @@ require(['utilities', 'grid', 'line', 'rectangle', 'circle', 'spiral', 'field', 
 	console.log(testRectangle);
 	console.log(testCircle);
 	console.log(testSpiral);
-	console.log(testField);
+	console.log(testOrderedField);
 	console.log(testBlob);
+	console.log(testPolarArray);
+	console.log(testRectangularArray);
 
 	testGrid.draw();
 });

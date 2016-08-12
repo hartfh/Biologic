@@ -2,10 +2,13 @@ define(function() {
 	var Shape = function(config) {};
 
 	Shape.prototype.init = function(self, config) {
+		var config = config || {};
+		var density = config.density || 100;
+
 		self.points = [];
 
 		self.generatePoints(config);
-		//self.randomize(config.random);
+		self.randomize(density);
 		self.substantiate();
 	}
 
@@ -41,11 +44,14 @@ define(function() {
 	/**
 	 * Reduces a shape's points to a randomly chosen subset.
 	 *
-	 * @param		{float}	percent	A float ranging from 0 - 1 that expresses the percentage of a shape's points that should remain
+	 * @param		{float}	density	A float ranging from 0 - 100 that expresses the percentage of a shape's points that should remain
 	 */
-	/*
-	Shape.prototype.randomize = function(percent) {
-		var percentToKeep	= percent || 1;
+	Shape.prototype.randomize = function(density) {
+		if( density == 100 ) {
+			return;
+		}
+
+		var percentToKeep	= density / 100;
 		var randomPoints	= [];
 
 		if( percentToKeep < 1 ) {
@@ -58,7 +64,6 @@ define(function() {
 			this.points = randomPoints;
 		}
 	}
-	*/
 
 	/**
 	 * Finds the lowest and highest X- and Y-values within a shape.

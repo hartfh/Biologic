@@ -6,13 +6,13 @@ define(['shape'], function(Shape) {
 	 * @param		{object}		config.origin		Start point of grid
 	 * @param		{object}		config.terminus	End point of grid
 	 */
-	var Field = function(config) {
+	var OrderedField = function(config) {
 		this.parent.init(this, config);
 	};
 
-	Field.extend(Shape);
+	OrderedField.extend(Shape);
 
-	Field.prototype.generatePoints = function(config) {
+	OrderedField.prototype.generatePoints = function(config) {
 		var spacing	= config.spacing;
 		var origin	= config.origin || {x: 0, y: 0};
 		var terminus	= config.terminus || {x: 0, y: 0};
@@ -24,5 +24,5 @@ define(['shape'], function(Shape) {
 		}
 	}
 
-	return Field;
+	return OrderedField;
 });

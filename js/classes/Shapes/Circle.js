@@ -16,7 +16,7 @@ define(['shape'], function(Shape) {
 		var type			= config.type || 'all';
 		var points		= [];
 		var offsetPoints	= [];
-		var origin		= config.origin;
+		var origin		= config.origin || {x: 0, y: 0};
 		var radius		= config.radius;
 
 		// Check against "type" argument to see if point should be included
