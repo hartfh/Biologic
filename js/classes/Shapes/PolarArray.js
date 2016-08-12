@@ -5,7 +5,7 @@ define(['shape'], function(Shape) {
 
 	PolarArray.extend(Shape);
 
-	PolarArray.prototype.generatePoints = function() {
+	PolarArray.prototype.generatePoints = function(config) {
 
 	}
 

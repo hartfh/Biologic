@@ -5,7 +5,7 @@ define(['shape'], function(Shape) {
 
 	RectangularArray.extend(Shape);
 
-	RectangularArray.prototype.generatePoints = function() {
+	RectangularArray.prototype.generatePoints = function(config) {
 
 	}
 

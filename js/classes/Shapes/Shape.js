@@ -10,6 +10,7 @@ define(function() {
 		self.generatePoints(config);
 		self.randomize(density);
 		self.substantiate();
+		self.elimDuplicates();
 	}
 
 	/**
@@ -24,7 +25,7 @@ define(function() {
 	/**
 	 * Abstract method which adds points to this shape.
 	 */
-	Shape.prototype.generatePoints = function() {}
+	Shape.prototype.generatePoints = function(config) {}
 
 	/**
 	 * Passes each point as well as its index to a callback function. Will exit the loop if the callback function returns true.
@@ -41,22 +42,24 @@ define(function() {
 		}
 	}
 
+
+	Shape.prototype.elimDuplicates = function() {
+		// TODO: remove any duplicate points
+		// create a new points array and only load things into it if they're not already in it. Then set new points array as the definitive one.
+	}
+
 	/**
 	 * Reduces a shape's points to a randomly chosen subset.
 	 *
 	 * @param		{float}	density	A float ranging from 0 - 100 that expresses the percentage of a shape's points that should remain
 	 */
 	Shape.prototype.randomize = function(density) {
-		if( density == 100 ) {
-			return;
-		}
-
 		var percentToKeep	= density / 100;
 		var randomPoints	= [];
 
 		if( percentToKeep < 1 ) {
 			this.eachPoint(function(point) {
-				if( Math.random() > percentToKeep ) {
+				if( Math.random() < percentToKeep ) {
 					randomPoints.push(point);
 				}
 			});
