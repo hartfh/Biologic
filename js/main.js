@@ -22,6 +22,7 @@ require.config({
 require(['utilities', 'grid', 'line', 'rectangle', 'circle', 'spiral', 'ordered-field', 'polar-array', 'rectangular-array', 'blob'], function(utilities, Grid, Line, Rectangle, Circle, Spiral, OrderedField, PolarArray, RectangularArray, Blob) {
 	//var testLayer = new Layer({name: 'primary-layer'});
 
+	/*
 	var testLine = new Line({
 		origin:		{x: 0, y: 0},
 		terminus:		{x: 2, y: 2}
@@ -54,9 +55,11 @@ require(['utilities', 'grid', 'line', 'rectangle', 'circle', 'spiral', 'ordered-
 		terminus:		{x: 5, y: 5},
 		spacing:		2
 	});
+	*/
 
 	var testBlob = new Blob({
-
+		origin:	{x: 15, y: 15},
+		radius:	6
 	});
 
 	var testPolarArray = new PolarArray({
@@ -69,18 +72,19 @@ require(['utilities', 'grid', 'line', 'rectangle', 'circle', 'spiral', 'ordered-
 
 	//testLine.rotate(90);
 
-	var testGrid = new Grid({width: 20, height: 20, name: 'grid-1'});
+	var testGrid = new Grid({width: 30, height: 30, name: 'grid-1'});
 
-	testGrid.toNodes(testSpiral, function(node) {
-		//node.updateContent('color', 'red');
+	testGrid.toNodes(testBlob, function(node) {
+		node.color = 'red';
 	});
 
-
+	/*
 	console.log(testLine);
 	console.log(testRectangle);
 	console.log(testCircle);
 	console.log(testSpiral);
 	console.log(testOrderedField);
+	*/
 	console.log(testBlob);
 	console.log(testPolarArray);
 	console.log(testRectangularArray);

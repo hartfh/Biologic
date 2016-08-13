@@ -11,6 +11,7 @@ define(function() {
 		self.randomize(density);
 		self.substantiate();
 		self.elimDuplicates();
+		//self.pushToOrigin();
 	}
 
 	/**
@@ -42,10 +43,30 @@ define(function() {
 		}
 	}
 
-
+	/**
+	 * Removes any duplicate points from the shape.
+	 */
 	Shape.prototype.elimDuplicates = function() {
-		// TODO: remove any duplicate points
-		// create a new points array and only load things into it if they're not already in it. Then set new points array as the definitive one.
+		var uniquePoints = [];
+
+		this.eachPoint(function(point, index) {
+			var add = true;
+
+			for(var u in uniquePoints) {
+				var uniquePoint = uniquePoints[u];
+
+				if( uniquePoint.x == point.x && uniquePoint.y == point.y ) {
+					add = false;
+					break;
+				}
+			}
+
+			if( add ) {
+				uniquePoints.push(point);
+			}
+		});
+
+		this.points = uniquePoints;
 	}
 
 	/**

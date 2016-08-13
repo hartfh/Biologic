@@ -8,13 +8,13 @@ define(['shape', 'circle'], function(Shape, Circle) {
 	Blob.prototype.generatePoints = function(config) {
 		var allCircles = []; // stores every circle created. Points are to be combined at the end. Then eliminate duplicates(?)
 
-		var center = config.center || {x: 0, y: 0};
-		var radius = config.center || 3;
+		var origin = config.origin || {x: 6, y: 6};
+		var radius = config.radius || 3;
 
 		// Recursively gather points. Get the points of a circle, then create recursive circles centered along random points of that circle.
-		(function(center, radius) {
-			var mainCircle		= new Circle({center: center, radius: radius});
-			var mainRandPoints	= new Circle({center: center, radius: radius, type: 'edge', density: 20});
+		(function(origin, radius) {
+			var mainCircle		= new Circle({origin: origin, radius: radius});
+			var mainRandPoints	= new Circle({origin: origin, radius: radius, type: 'edge', density: 14});
 
 			allCircles.push(mainCircle);
 
@@ -29,20 +29,19 @@ define(['shape', 'circle'], function(Shape, Circle) {
 
 				arguments.callee(randPoint, newRadius);
 			}
-		}(center, radius));
+		}(origin, radius));
 
-		// combine all circle points
+		// Add all circle points into this shape's points
 		for(var c in allCircles) {
 			var subCircle = allCircles[c];
 
-			// eliminate duplicates
+			for(var p in subCircle.points) {
+				var point = subCircle.points[p];
+
+				this.addPoint(point);
+			}
+
 		}
-
-		// this.addPoint({});
-
-		// currently can only do "all" circle points. Cannot select "edge" or "interior".
-
-		console.log(allCircles);
 	}
 
 	return Blob;

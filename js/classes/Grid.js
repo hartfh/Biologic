@@ -29,7 +29,7 @@ define(['constants', 'cell', 'compass'], function(constants, Cell, Compass) {
 			}
 		}
 
-		constants.$app.append('<canvas id="' + config.name + '" width="1000" height="500" />');
+		constants.$app.append('<canvas id="' + config.name + '" width="900" height="900" />');
 		var elem	= document.getElementById(config.name);
 		this.ctx	= elem.getContext('2d');
 	}
@@ -61,11 +61,10 @@ define(['constants', 'cell', 'compass'], function(constants, Cell, Compass) {
 
 			/*
 			var color = node.getContent('color');
-
-			if( color == 'red' ) {
+			*/
+			if( node.color == 'red' ) {
 				swatch = 'rgba(109, 0, 9, 1)';
 			}
-			*/
 
 			self.ctx.fillStyle = swatch;
 			self.ctx.fillRect(nodeStartX, nodeStartY, nodeWidth, nodeWidth);
@@ -117,8 +116,10 @@ define(['constants', 'cell', 'compass'], function(constants, Cell, Compass) {
 	 */
 	Grid.prototype.getNode = function(x, y) {
 		if( this.withinBounds(x, y) ) {
-			return this.nodes[y][x];
+			return this.nodes[x][y];
 		}
+
+		return false;
 	}
 
 	/**
@@ -142,9 +143,8 @@ define(['constants', 'cell', 'compass'], function(constants, Cell, Compass) {
 			west:	west
 		};
 
-		var node = new Cell(args);
 
-		//node.addContent('color', 'blue');
+		var node = new Cell(args);
 
 		this.nodes[y][x] = node;
 
@@ -193,11 +193,11 @@ define(['constants', 'cell', 'compass'], function(constants, Cell, Compass) {
 	}
 
 	Grid.prototype.eachNode = function(callback) {
-		for(var y in this.nodes) {
-			var column = this.nodes[y];
+		for(var x in this.nodes) {
+			var column = this.nodes[x];
 
-			for(var x in column) {
-				var node = column[x];
+			for(var y in column) {
+				var node = column[y];
 
 				callback(node, x, y);
 			}
