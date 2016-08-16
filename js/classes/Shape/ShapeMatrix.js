@@ -1,6 +1,6 @@
 define(function() {
 	/**
-	 * A helper class for Shape. Allow for easy detection of empty points.
+	 * A helper class for Shape. Allow for easy access to adjacent points.
 	 *
 	 * @param		{integer}		width
 	 * @param		{integer}		height

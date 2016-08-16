@@ -1,4 +1,12 @@
 define(['shape', 'rectangle', 'circle', 'spiral', 'ordered-field'], function(Shape, Rectangle, Circle, Spiral, OrderedField) {
+	/**
+	 * Creates a shape composed of a series of subshapes arrayed along a uniformly spaced grid.
+	 *
+	 * @param		{object}	config.origin		Point object
+	 * @param		{integer}	config.width		Width of the shape's point field
+	 * @param		{integer}	config.height		Height of the shape's point field
+	 * @param		{integer}	config.spacing		How far apart to space the subshapes
+	 */
 	var RectangularArray = function(config) {
 		this.parent.init(this, config);
 	}

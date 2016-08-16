@@ -22,9 +22,9 @@ require.config({
 });
 
 // TODO:
-// -fix bugs in flip()
-// -decide what rotate() should rotate about. (possibly the origin, unless specific, now that negative points are allowed)
-// -Finish PolarArray
+// -Fix bugs in flip()
+// Add Line to Array classes
+// Consider other classes: Branch, Shapes utilizing recursion, Something like Blob but with Rectangles
 
 require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'spiral', 'ordered-field', 'polar-array', 'rectangular-array', 'blob'], function(utilities, Grid, Blank, Line, Rectangle, Circle, Spiral, OrderedField, PolarArray, RectangularArray, Blob) {
 	//var testLayer = new Layer({name: 'primary-layer'});
@@ -72,29 +72,44 @@ require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'spiral', 
 	});
 	*/
 
+	/*
 	var testCircle = new Circle({
-		origin:		{x: 4, y: 4},
-		radius:		7,
+		origin:		{x: 0, y: 0},
+		radius:		10,
 		edges:		true,
 		//density:		80,
 		substantiate:	false
 	});
+	*/
 
-	//testCircle.rotate(0);
+	//testCircle.rotate(90);
 
-	/*
 	var testPolarArray = new PolarArray({
 		origin:	{x: 15, y: 15},
-		radius:	8,
+		radius:	9,
 		number:	4,
+		adjust:	{x: 0, y: 0},
 		shape:	{
+			/*
+			type:	'spiral',
+			config:	{
+				limit:	11
+			}
+			*/
 			type:	'circle',
 			config:	{
 				radius:		5
 			}
-		}
+			/*
+			type:	'rectangle',
+			config:	{
+				width:	10,
+				height:	7
+			}
+			*/
+		},
+		edges:	true
 	});
-	*/
 
 	/*
 	var testRectangularArray = new RectangularArray({
@@ -129,7 +144,7 @@ require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'spiral', 
 	});
 	*/
 
-	testGrid.toNodes(testCircle, function(node) {
+	testGrid.toNodes(testPolarArray, function(node) {
 		node.color = 'red';
 	});
 

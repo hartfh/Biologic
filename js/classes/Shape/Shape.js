@@ -207,6 +207,7 @@ define(['shape-matrix'], function(ShapeMatrix) {
 	Shape.prototype.rotate = function(degrees) {
 		var newPoints = [];
 
+		/*
 		// Calculate the shape's center
 		var extremes	= this.findExtremes();
 		var width		= extremes.highest.x;
@@ -215,10 +216,11 @@ define(['shape-matrix'], function(ShapeMatrix) {
 		var centerX	= Math.ceil( (width * 0.5) );
 		var centerY	= Math.ceil( (height * 0.5) );
 		var center	= {x: centerX, y: centerY};
+		*/
 
 		var radians	= degrees * Math.PI / 180;
 
-		this.translate(-1 * centerX, -1 * centerY);
+		//this.translate(-1 * centerX, -1 * centerY);
 
 		this.eachPoint(function(point) {
 			var rotatedX = point.x * Math.cos(radians) - point.y * Math.sin(radians);
@@ -230,8 +232,8 @@ define(['shape-matrix'], function(ShapeMatrix) {
 
 		this.points = newPoints;
 
-		this.translate(centerX, centerY);
-		this.substantiate();
+		//this.translate(centerX, centerY);
+		//this.substantiate();
 	}
 
 	// TODO: possibly bugged on shapes with an even height
