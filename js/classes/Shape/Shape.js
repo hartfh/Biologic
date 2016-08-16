@@ -1,9 +1,9 @@
-define(function() {
+define(['shape-matrix'], function(ShapeMatrix) {
 	var Shape = function(config) {};
 
 	Shape.prototype.init = function(self, config) {
-		var config = config || {};
-		var density = config.density || 100;
+		var config	= config || {};
+		var density	= config.density || 100;
 
 		self.points = [];
 
@@ -11,7 +11,14 @@ define(function() {
 		self.randomize(density);
 		self.substantiate();
 		self.elimDuplicates();
+
+		// Optional Methods: (consider wrapping these in a single function)
 		//self.pushToOrigin();
+
+		if( config.edges ) {
+			self.reduceToEdges();
+		}
+
 	}
 
 	/**
@@ -67,6 +74,20 @@ define(function() {
 		});
 
 		this.points = uniquePoints;
+	}
+
+	/**
+	 * Reduces this shape's points to just edge points.
+	 */
+	Shape.prototype.reduceToEdges = function() {
+		var extremes	= this.findExtremes();
+		var matrix	= new ShapeMatrix(extremes.highest.x + 1, extremes.highest.y + 1);
+
+		matrix.loadPoints(this);
+
+		var edges = matrix.getEdgePoints();
+
+		this.points = edges;
 	}
 
 	/**

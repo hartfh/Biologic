@@ -7,15 +7,16 @@ require.config({
 		'node':				'classes/Node',
 		'cell':				'classes/Cell',
 		'compass':			'classes/Compass',
-		'shape':				'classes/Shapes/Shape',
-		'line':				'classes/Shapes/Line',
-		'rectangle':			'classes/Shapes/Rectangle',
-		'circle':				'classes/Shapes/Circle',
-		'spiral':				'classes/Shapes/Spiral',
-		'ordered-field':		'classes/Shapes/OrderedField',
-		'polar-array':			'classes/Shapes/PolarArray',
-		'rectangular-array':	'classes/Shapes/RectangularArray',
-		'blob':				'classes/Shapes/Blob'
+		'shape':				'classes/Shape/Shape',
+		'shape-matrix':		'classes/Shape/ShapeMatrix',
+		'line':				'classes/Shape/Line',
+		'rectangle':			'classes/Shape/Rectangle',
+		'circle':				'classes/Shape/Circle',
+		'spiral':				'classes/Shape/Spiral',
+		'ordered-field':		'classes/Shape/OrderedField',
+		'polar-array':			'classes/Shape/PolarArray',
+		'rectangular-array':	'classes/Shape/RectangularArray',
+		'blob':				'classes/Shape/Blob'
 	}
 });
 
@@ -59,7 +60,8 @@ require(['utilities', 'grid', 'line', 'rectangle', 'circle', 'spiral', 'ordered-
 
 	var testBlob = new Blob({
 		origin:	{x: 15, y: 15},
-		radius:	6
+		radius:	6,
+		edges:	true
 	});
 
 	var testPolarArray = new PolarArray({
