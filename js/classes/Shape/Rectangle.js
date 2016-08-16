@@ -4,7 +4,9 @@ define(['shape'], function(Shape) {
 	 *
 	 * @param		{object}	config.origin		Start point
 	 * @param		{object}	config.terminus	End point
-	 * @param		{string}	config.types		Which point types to include: edge or interior
+	 * @param		{integer}	config.width
+	 * @param		{integer}	config.height
+	 * @param		{string}	config.type		Which point types to include: edge or interior
 	 */
 	var Rectangle = function(config) {
 		this.parent.init(this, config);
@@ -14,11 +16,15 @@ define(['shape'], function(Shape) {
 
 	Rectangle.prototype.generatePoints = function(config) {
 		var origin	= config.origin;
-		var terminus	= config.terminus;
-		var types		= types || 'all';
+		var width		= config.width || 0;
+		var height	= config.height || 0;
+		var type		= type || 'all';
+		var terminus	= {x: origin.x + width, y: origin.y + height};
 
-		var width		= terminus.x - origin.x + 1;
-		var height	= terminus.y - origin.y + 1;
+		type = 'all'; // temporarily(?) disable the type functionality in favor of Shape.reduceToEdges()
+
+		//var width		= terminus.x - origin.x + 1;
+		//var height	= terminus.y - origin.y + 1;
 
 		var start	= {x: false, y: false};
 		var end	= {x: false, y: false};
@@ -55,8 +61,8 @@ define(['shape'], function(Shape) {
 					offsetPoint.type = 'edge';
 				}
 
-				// Check against "types" argument to see if point should be included
-				if( types == offsetPoint.type || types == 'all' ) {
+				// Check against "type" argument to see if point should be included
+				if( type == offsetPoint.type || type == 'all' ) {
 					this.addPoint(offsetPoint);
 				}
 			}

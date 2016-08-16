@@ -2,23 +2,33 @@ define(['shape-matrix'], function(ShapeMatrix) {
 	var Shape = function(config) {};
 
 	Shape.prototype.init = function(self, config) {
-		var config	= config || {};
-		var density	= config.density || 100;
+		var config		= config || {};
+		var density		= config.density || 100;
+		var substantiate	= config.substantiate;
+		var edges			= config.edges;
 
-		self.points = [];
-
-		self.generatePoints(config);
-		self.randomize(density);
-		self.substantiate();
-		self.elimDuplicates();
-
-		// Optional Methods: (consider wrapping these in a single function)
-		//self.pushToOrigin();
-
-		if( config.edges ) {
-			self.reduceToEdges();
+		if( typeof(config.substantiate) == 'undefined' ) {
+			substantiate = true;
+		}
+		if( typeof(config.edges) == 'undefined' ) {
+			edges = false;
 		}
 
+		self.points = [];
+		self.generatePoints(config);
+		self.elimDuplicates();
+
+		if( substantiate ) {
+			self.substantiate();
+		}
+
+		//self.pushToOrigin();
+
+		if( edges ) {
+			self.reduceToEdges(!substantiate);
+		}
+
+		self.randomize(density);
 	}
 
 	/**
@@ -78,16 +88,34 @@ define(['shape-matrix'], function(ShapeMatrix) {
 
 	/**
 	 * Reduces this shape's points to just edge points.
+	 *
+	 * @param		{boolean}		substantiate	Whether or not to temporarily set all points to positive for use in a ShapeMatrix.
 	 */
-	Shape.prototype.reduceToEdges = function() {
+	Shape.prototype.reduceToEdges = function(substantiate) {
 		var extremes	= this.findExtremes();
-		var matrix	= new ShapeMatrix(extremes.highest.x + 1, extremes.highest.y + 1);
+		var width		= extremes.highest.x + 1;
+		var height	= extremes.highest.y + 1;
+
+		if( substantiate ) {
+			this.substantiate();
+
+			var tempExtremes	= this.findExtremes();
+			var width			= tempExtremes.highest.x + 1;
+			var height		= tempExtremes.highest.y + 1;
+		}
+
+		var matrix = new ShapeMatrix(width, height);
 
 		matrix.loadPoints(this);
 
 		var edges = matrix.getEdgePoints();
 
 		this.points = edges;
+
+		// Unsubstantiate the shape
+		if( substantiate ) {
+			this.translate(extremes.lowest.x, extremes.lowest.y);
+		}
 	}
 
 	/**
@@ -179,34 +207,31 @@ define(['shape-matrix'], function(ShapeMatrix) {
 	Shape.prototype.rotate = function(degrees) {
 		var newPoints = [];
 
-		// Calculate the shape's center by determing the height/width of the occupied space
+		// Calculate the shape's center
 		var extremes	= this.findExtremes();
+		var width		= extremes.highest.x;
+		var height	= extremes.highest.y;
 
-		var width		= extremes.highest.x - extremes.lowest.x;
-		var height	= extremes.highest.y - extremes.lowest.y;
-
-		var centerX	= Math.ceil( extremes.lowest.x + (width * 0.5) );
-		var centerY	= Math.ceil( extremes.lowest.y + (height * 0.5) );
+		var centerX	= Math.ceil( (width * 0.5) );
+		var centerY	= Math.ceil( (height * 0.5) );
 		var center	= {x: centerX, y: centerY};
 
 		var radians	= degrees * Math.PI / 180;
 
-		// Rotate each point about the calculated center
-		this.eachPoint(function(point) {
-			point.x -= center.x;
-			point.y -= center.y;
+		this.translate(-1 * centerX, -1 * centerY);
 
+		this.eachPoint(function(point) {
 			var rotatedX = point.x * Math.cos(radians) - point.y * Math.sin(radians);
 			var rotatedY = point.y * Math.cos(radians) + point.x * Math.sin(radians);
 			var newPoint = {x: Math.round(rotatedX), y: Math.round(rotatedY)};
-
-			newPoint.x += center.x;
-			newPoint.y += center.y;
 
 			newPoints.push(newPoint);
 		});
 
 		this.points = newPoints;
+
+		this.translate(centerX, centerY);
+		this.substantiate();
 	}
 
 	// TODO: possibly bugged on shapes with an even height

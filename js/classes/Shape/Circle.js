@@ -17,7 +17,9 @@ define(['shape'], function(Shape) {
 		var points		= [];
 		var offsetPoints	= [];
 		var origin		= config.origin || {x: 0, y: 0};
-		var radius		= config.radius;
+		var radius		= config.radius || 1;
+
+		type = 'all'; // temporarily(?) disable the type functionality in favor of Shape.reduceToEdges()
 
 		// Check against "type" argument to see if point should be included
 		var shouldIncludePoint = function(point) {
@@ -32,8 +34,6 @@ define(['shape'], function(Shape) {
 		if( !radius ) {
 			points.push({x: origin.x, y: origin.y, type: 'interior'});
 		}
-
-		radius--;
 
 		// Get edge points on one 45 deg arc
 		for(var i = 0; i < radius; i++) {

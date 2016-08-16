@@ -29,7 +29,7 @@ define(['constants', 'cell', 'compass'], function(constants, Cell, Compass) {
 			}
 		}
 
-		constants.$app.append('<canvas id="' + config.name + '" width="900" height="900" />');
+		constants.$app.append('<canvas id="' + config.name + '" width="1200" height="900" />');
 		var elem	= document.getElementById(config.name);
 		this.ctx	= elem.getContext('2d');
 	}

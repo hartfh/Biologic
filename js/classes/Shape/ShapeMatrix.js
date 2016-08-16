@@ -1,4 +1,10 @@
 define(function() {
+	/**
+	 * A helper class for Shape. Allow for easy detection of empty points.
+	 *
+	 * @param		{integer}		width
+	 * @param		{integer}		height
+	 */
 	var ShapeMatrix = function(width, height) {
 		this.width	= width;
 		this.height	= height;
@@ -30,6 +36,12 @@ define(function() {
 		}
 	}
 
+	/**
+	 * Get a point within this matrix. Returns false if the coordinates are out of bounds.
+	 *
+	 * @param		{integer}		x
+	 * @param		{integer}		y
+	 */
 	ShapeMatrix.prototype.getPoint = function(x, y) {
 		if( x < 0 || x >= this.width ) {
 			return false;
@@ -56,6 +68,11 @@ define(function() {
 		}
 	}
 
+	/**
+	 * Returns a points that are considered to be edges.
+	 *
+	 * @return	{array}	edgePoints
+	 */
 	ShapeMatrix.prototype.getEdgePoints = function() {
 		var self		= this;
 		var edgePoints = [];

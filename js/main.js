@@ -9,6 +9,7 @@ require.config({
 		'compass':			'classes/Compass',
 		'shape':				'classes/Shape/Shape',
 		'shape-matrix':		'classes/Shape/ShapeMatrix',
+		'blank':				'classes/Shape/Blank',
 		'line':				'classes/Shape/Line',
 		'rectangle':			'classes/Shape/Rectangle',
 		'circle':				'classes/Shape/Circle',
@@ -20,7 +21,12 @@ require.config({
 	}
 });
 
-require(['utilities', 'grid', 'line', 'rectangle', 'circle', 'spiral', 'ordered-field', 'polar-array', 'rectangular-array', 'blob'], function(utilities, Grid, Line, Rectangle, Circle, Spiral, OrderedField, PolarArray, RectangularArray, Blob) {
+// TODO:
+// -fix bugs in flip()
+// -decide what rotate() should rotate about. (possibly the origin, unless specific, now that negative points are allowed)
+// -Finish PolarArray
+
+require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'spiral', 'ordered-field', 'polar-array', 'rectangular-array', 'blob'], function(utilities, Grid, Blank, Line, Rectangle, Circle, Spiral, OrderedField, PolarArray, RectangularArray, Blob) {
 	//var testLayer = new Layer({name: 'primary-layer'});
 
 	/*
@@ -35,8 +41,10 @@ require(['utilities', 'grid', 'line', 'rectangle', 'circle', 'spiral', 'ordered-
 	});
 
 	var testRectangle = new Rectangle({
-		origin:		{x: 1, y: 1},
-		terminus:		{x: 3, y: 3}
+		origin:	{x: 10, y: 10},
+		width:	5,
+		height:	9,
+		edges:	true
 	});
 
 	var testCircle = new Circle({
@@ -56,27 +64,72 @@ require(['utilities', 'grid', 'line', 'rectangle', 'circle', 'spiral', 'ordered-
 		terminus:		{x: 5, y: 5},
 		spacing:		2
 	});
-	*/
 
 	var testBlob = new Blob({
 		origin:	{x: 15, y: 15},
 		radius:	6,
 		edges:	true
 	});
+	*/
 
+	var testCircle = new Circle({
+		origin:		{x: 4, y: 4},
+		radius:		7,
+		edges:		true,
+		//density:		80,
+		substantiate:	false
+	});
+
+	//testCircle.rotate(0);
+
+	/*
 	var testPolarArray = new PolarArray({
-
+		origin:	{x: 15, y: 15},
+		radius:	8,
+		number:	4,
+		shape:	{
+			type:	'circle',
+			config:	{
+				radius:		5
+			}
+		}
 	});
+	*/
 
+	/*
 	var testRectangularArray = new RectangularArray({
-
+		origin:	{x: 0, y: 0},
+		width:	46,
+		height:	28,
+		spacing:	15,
+		shape:	{
+			type:	'rectangle',
+			config:	{
+				width:	4,
+				height:	5
+			}
+			type:	'circle',
+			config:	{
+				radius:	5
+			}
+			type:	'spiral',
+			config:	{
+				limit:	11
+			}
+		},
+		//edges:	true
 	});
+	*/
 
-	//testLine.rotate(90);
+	var testGrid = new Grid({width: 59, height: 30, name: 'grid-1'});
 
-	var testGrid = new Grid({width: 30, height: 30, name: 'grid-1'});
-
+	/*
 	testGrid.toNodes(testBlob, function(node) {
+		node.color = 'red';
+	});
+	*/
+
+	testGrid.toNodes(testCircle, function(node) {
 		node.color = 'red';
 	});
 
@@ -87,9 +140,8 @@ require(['utilities', 'grid', 'line', 'rectangle', 'circle', 'spiral', 'ordered-
 	console.log(testSpiral);
 	console.log(testOrderedField);
 	*/
-	console.log(testBlob);
-	console.log(testPolarArray);
-	console.log(testRectangularArray);
+	//console.log(testBlob);
+	//console.log(testPolarArray);
 
 	testGrid.draw();
 });
