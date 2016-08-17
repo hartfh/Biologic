@@ -10,6 +10,9 @@ define(['node'], function(Node) {
 
 		// child class specific properties here
 		//this.lifespan?
+
+		// this.status; // alive, inert
+		// this.special? // generator; immortal
 	}
 
 	//Cell.prototype.grow = function() {}

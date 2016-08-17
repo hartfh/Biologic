@@ -17,16 +17,20 @@ require.config({
 		'ordered-field':		'classes/Shape/OrderedField',
 		'polar-array':			'classes/Shape/PolarArray',
 		'rectangular-array':	'classes/Shape/RectangularArray',
+		'linear-array':		'classes/Shape/LinearArray',
 		'blob':				'classes/Shape/Blob'
 	}
 });
 
 // TODO:
-// -Fix bugs in flip()
+// Fix bugs in flip()
 // Add Line to Array classes
-// Consider other classes: Branch, Shapes utilizing recursion, Something like Blob but with Rectangles
+// Finish LinearArray class
+// Consider other classes: Branching pattern, Shapes utilizing recursion, Something like Blob but with Rectangles
+//   -Other irregular shapes: Fractal that uses a subshape
+// Create various types of Cell behavior. (e.g. generator, alive with lifespan, inert)
 
-require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'spiral', 'ordered-field', 'polar-array', 'rectangular-array', 'blob'], function(utilities, Grid, Blank, Line, Rectangle, Circle, Spiral, OrderedField, PolarArray, RectangularArray, Blob) {
+require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'spiral', 'ordered-field', 'polar-array', 'rectangular-array', 'linear-array', 'blob'], function(utilities, Grid, Blank, Line, Rectangle, Circle, Spiral, OrderedField, PolarArray, RectangularArray, LinearArray, Blob) {
 	//var testLayer = new Layer({name: 'primary-layer'});
 
 	/*
@@ -43,8 +47,7 @@ require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'spiral', 
 	var testRectangle = new Rectangle({
 		origin:	{x: 10, y: 10},
 		width:	5,
-		height:	9,
-		edges:	true
+		height:	9
 	});
 
 	var testCircle = new Circle({
@@ -67,8 +70,7 @@ require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'spiral', 
 
 	var testBlob = new Blob({
 		origin:	{x: 15, y: 15},
-		radius:	6,
-		edges:	true
+		radius:	6
 	});
 	*/
 
@@ -76,7 +78,6 @@ require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'spiral', 
 	var testCircle = new Circle({
 		origin:		{x: 0, y: 0},
 		radius:		10,
-		edges:		true,
 		//density:		80,
 		substantiate:	false
 	});
@@ -86,7 +87,7 @@ require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'spiral', 
 
 	var testPolarArray = new PolarArray({
 		origin:	{x: 15, y: 15},
-		radius:	9,
+		radius:	7,
 		number:	4,
 		adjust:	{x: 0, y: 0},
 		shape:	{
@@ -103,12 +104,11 @@ require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'spiral', 
 			/*
 			type:	'rectangle',
 			config:	{
-				width:	10,
+				width:	9,
 				height:	7
 			}
 			*/
-		},
-		edges:	true
+		}
 	});
 
 	/*
@@ -131,8 +131,7 @@ require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'spiral', 
 			config:	{
 				limit:	11
 			}
-		},
-		//edges:	true
+		}
 	});
 	*/
 
@@ -144,7 +143,7 @@ require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'spiral', 
 	});
 	*/
 
-	testGrid.toNodes(testPolarArray, function(node) {
+	testGrid.toNodes(testPolarArray.edge, function(node) {
 		node.color = 'red';
 	});
 

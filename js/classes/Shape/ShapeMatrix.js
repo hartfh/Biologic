@@ -69,13 +69,14 @@ define(function() {
 	}
 
 	/**
-	 * Returns a points that are considered to be edges.
+	 * Separates points into edge and inside.
 	 *
 	 * @return	{array}	edgePoints
 	 */
-	ShapeMatrix.prototype.getEdgePoints = function() {
-		var self		= this;
-		var edgePoints = [];
+	ShapeMatrix.prototype.separateTypes = function() {
+		var self			= this;
+		var edgePoints		= [];
+		var insidePoints	= [];
 
 		this.eachPoint(function(point, x, y) {
 			if( point ) {
@@ -96,11 +97,13 @@ define(function() {
 
 				if( neighbors < 4 ) {
 					edgePoints.push({x: x, y: y});
+				} else {
+					insidePoints.push({x: x, y: y});
 				}
 			}
 		});
 
-		return edgePoints;
+		return {edge: edgePoints, inside: insidePoints};
 	}
 
 	return ShapeMatrix;

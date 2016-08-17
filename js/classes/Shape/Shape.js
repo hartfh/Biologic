@@ -5,14 +5,16 @@ define(['shape-matrix'], function(ShapeMatrix) {
 		var config		= config || {};
 		var density		= config.density || 100;
 		var substantiate	= config.substantiate;
-		var edges			= config.edges;
+		//var edges			= config.edges;
 
 		if( typeof(config.substantiate) == 'undefined' ) {
 			substantiate = true;
 		}
+		/*
 		if( typeof(config.edges) == 'undefined' ) {
 			edges = false;
 		}
+		*/
 
 		self.points = [];
 		self.generatePoints(config);
@@ -24,9 +26,12 @@ define(['shape-matrix'], function(ShapeMatrix) {
 
 		//self.pushToOrigin();
 
+		/*
 		if( edges ) {
 			self.reduceToEdges(!substantiate);
 		}
+		*/
+		self.separateTypes();
 
 		self.randomize(density);
 	}
@@ -87,11 +92,11 @@ define(['shape-matrix'], function(ShapeMatrix) {
 	}
 
 	/**
-	 * Reduces this shape's points to just edge points.
+	 * Separate shape's points into "inside" and "edge" points.
 	 *
 	 * @param		{boolean}		substantiate	Whether or not to temporarily set all points to positive for use in a ShapeMatrix.
 	 */
-	Shape.prototype.reduceToEdges = function(substantiate) {
+	Shape.prototype.separateTypes = function(substantiate) {
 		var extremes	= this.findExtremes();
 		var width		= extremes.highest.x + 1;
 		var height	= extremes.highest.y + 1;
@@ -108,9 +113,10 @@ define(['shape-matrix'], function(ShapeMatrix) {
 
 		matrix.loadPoints(this);
 
-		var edges = matrix.getEdgePoints();
+		var types = matrix.separateTypes();
 
-		this.points = edges;
+		this.edge		= types.edge;
+		this.inside	= types.inside;
 
 		// Unsubstantiate the shape
 		if( substantiate ) {
