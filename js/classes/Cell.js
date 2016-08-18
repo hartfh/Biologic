@@ -8,20 +8,26 @@ define(['node'], function(Node) {
 	Cell.prototype.init = function(config) {
 		this.parent.init(this, config);
 
-		// child class specific properties here
-		//this.lifespan?
+		//this.lifespan = X;  // starts high and counts down
 
 		// this.status; // alive, inert
 		// this.special? // generator; immortal
+
+		// 
+
+		// directionality: spawn live cells in particular directions: all, some or none
 	}
 
-	//Cell.prototype.grow = function() {}
+	Cell.prototype.age = function() {
+		// include "immortal" check here?
+		this.lifespan--;
 
-	//Cell.prototype.replicate = function() {}
+		if( this.lifespan == 0 ) {
+			// ?
+		}
+	}
 
-	//Cell.prototype.expand = function(dir?) {}
-
-	// various seed types. seed causes cell to expand out according to various guidelines (utilizing shapes, somehow)
+	//Cell.prototype.expand/grow = function(dir?) {}
 
 	return Cell;
 });

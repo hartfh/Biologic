@@ -1,20 +1,21 @@
 define(['shape-matrix'], function(ShapeMatrix) {
+	/**
+	 * An abstract parent class for creating shapes made up of point objects containing X- and Y-coordinates.
+	 *
+	 * @param		{object}	config				Configuration object
+	 * @param		{integer}	config.density			What percentage of randomly chosen points to keep
+	 * @param		{boolean}	config.substantiate		Determines whether to call this.substantiate()
+	 */
 	var Shape = function(config) {};
 
 	Shape.prototype.init = function(self, config) {
 		var config		= config || {};
 		var density		= config.density || 100;
 		var substantiate	= config.substantiate;
-		//var edges			= config.edges;
 
 		if( typeof(config.substantiate) == 'undefined' ) {
 			substantiate = true;
 		}
-		/*
-		if( typeof(config.edges) == 'undefined' ) {
-			edges = false;
-		}
-		*/
 
 		self.points = [];
 		self.generatePoints(config);
@@ -26,11 +27,6 @@ define(['shape-matrix'], function(ShapeMatrix) {
 
 		//self.pushToOrigin();
 
-		/*
-		if( edges ) {
-			self.reduceToEdges(!substantiate);
-		}
-		*/
 		self.separateTypes();
 
 		self.randomize(density);

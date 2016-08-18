@@ -29,6 +29,11 @@ require.config({
 // Consider other classes: Branching pattern, Shapes utilizing recursion, Something like Blob but with Rectangles
 //   -Other irregular shapes: Fractal that uses a subshape
 // Create various types of Cell behavior. (e.g. generator, alive with lifespan, inert)
+// Setup some premade shape arrangements that specify starting stats for some of the cells.
+// 	-Might want a new class that combines shape creation with modifications to cells. e.g. Pattern or Template
+// Shape for creating rings/donuts with a "hole" in them. Or possibly just create a subtract() method. Also join().
+//	-Create a ring with 1px inside region. Allow a single cell to loop around in it.
+//	-Can create wires/circuits for cells.
 
 require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'spiral', 'ordered-field', 'polar-array', 'rectangular-array', 'linear-array', 'blob'], function(utilities, Grid, Blank, Line, Rectangle, Circle, Spiral, OrderedField, PolarArray, RectangularArray, LinearArray, Blob) {
 	//var testLayer = new Layer({name: 'primary-layer'});
