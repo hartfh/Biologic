@@ -34,6 +34,23 @@ define(['constants', 'cell', 'compass'], function(constants, Cell, Compass) {
 		this.ctx	= elem.getContext('2d');
 	}
 
+	Grid.prototype.cycle = function() {
+		// this.activeCells = [];
+		// keep "alive" cells in an array (initially load them somehow).
+		// each cycle we create a new array and load newly alive cells into it? old array gets oerwritten
+		// don't track immortal/inert cells
+
+
+		var modifiedCells = [];
+
+		// add modified cells into array
+
+		// revert each cell in modified array to unmodified
+
+		// redraw only the old and newly modified cells
+		// add in a drawNode() method?
+	}
+
 	/**
 	 * Clears all nodes from the drawing area.
 	 */
@@ -190,6 +207,11 @@ define(['constants', 'cell', 'compass'], function(constants, Cell, Compass) {
 		}
 	}
 
+	/**
+	 * Passes each node to a callback function.
+	 *
+	 * @param		{function}	callback	Callback function. Break the loop by returning true
+	 */
 	Grid.prototype.eachNode = function(callback) {
 		for(var x in this.nodes) {
 			var column = this.nodes[x];
@@ -197,7 +219,9 @@ define(['constants', 'cell', 'compass'], function(constants, Cell, Compass) {
 			for(var y in column) {
 				var node = column[y];
 
-				callback(node, x, y);
+				if( callback(node, x, y) ) {
+					break;
+				}
 			}
 		}
 	}

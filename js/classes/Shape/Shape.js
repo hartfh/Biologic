@@ -18,6 +18,7 @@ define(['shape-matrix'], function(ShapeMatrix) {
 		}
 
 		self.points = [];
+
 		self.generatePoints(config);
 		self.elimDuplicates();
 
@@ -28,7 +29,6 @@ define(['shape-matrix'], function(ShapeMatrix) {
 		//self.pushToOrigin();
 
 		self.separateTypes();
-
 		self.randomize(density);
 	}
 
@@ -52,13 +52,47 @@ define(['shape-matrix'], function(ShapeMatrix) {
 	 * @param		{function}	callback
 	 */
 	Shape.prototype.eachPoint = function(callback) {
-		for(var i in this.points) {
-			var point	= this.points[i];
+		for(var index in this.points) {
+			var point	= this.points[index];
 
-			if( callback(point, i) ) {
+			if( callback(point, index) ) {
 				break;
 			}
 		}
+	}
+
+	Shape.prototype.join = function(shape) {
+
+
+		// finish by running eliminateDuplicates().
+	}
+
+	/**
+	 * Remove matching points in the provided shape from this shape's points.
+	 *
+	 * @param		{object}	shape	A Shape object
+	 */
+	Shape.prototype.subtract = function(shape) {
+		// Rather than splicing out point indices from this.points, simply track the points to keep in a new array
+		var newPoints = [];
+
+		this.eachPoint(function(point, index) {
+			var keep = true;
+
+			shape.eachPoint(function(subtractPoint, subtractIndex) {
+				if( point.x == subtractPoint.x && point.y == subtractPoint.y ) {
+					keep = false;
+
+					return true;
+				}
+			});
+
+			if( keep ) {
+				newPoints.push(point);
+			}
+		});
+
+		this.points = newPoints;
 	}
 
 	/**

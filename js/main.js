@@ -148,7 +148,20 @@ require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'spiral', 
 	});
 	*/
 
-	testGrid.toNodes(testPolarArray.edge, function(node) {
+	var testRectangle = new Rectangle({
+		origin:	{x: 10, y: 10},
+		width:	14,
+		height:	12
+	});
+
+	var testCircle = new Circle({
+		origin:	{x: 15, y: 15},
+		radius:	4,
+	});
+
+	testRectangle.subtract(testCircle);
+
+	testGrid.toNodes(testPolarArray.points, function(node) {
 		node.color = 'red';
 	});
 
