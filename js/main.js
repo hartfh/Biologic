@@ -35,6 +35,12 @@ require.config({
 //	-Create a ring with 1px inside region. Allow a single cell to loop around in it.
 //	-Can create wires/circuits for cells.
 
+// Create an "engine" class(?). Instantiates a Grid, creates shapes, loads them. Cycles Grid every 1-2 seconds.
+// Find some way to combine engine with advanced shapes
+
+// Remove separateTypes() from shape creation. Change Grid.toNodes() to accept just a Shape object.
+// Possibly change getEdges/Insides to calculate points.
+
 require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'spiral', 'ordered-field', 'polar-array', 'rectangular-array', 'linear-array', 'blob'], function(utilities, Grid, Blank, Line, Rectangle, Circle, Spiral, OrderedField, PolarArray, RectangularArray, LinearArray, Blob) {
 	//var testLayer = new Layer({name: 'primary-layer'});
 
@@ -142,6 +148,7 @@ require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'spiral', 
 
 	var testGrid = new Grid({width: 59, height: 30, name: 'grid-1'});
 
+
 	/*
 	testGrid.toNodes(testBlob, function(node) {
 		node.color = 'red';
@@ -154,14 +161,33 @@ require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'spiral', 
 		height:	12
 	});
 
-	var testCircle = new Circle({
-		origin:	{x: 15, y: 15},
-		radius:	4,
+	var testRectangle2 = new Rectangle({
+		origin:	{x: 13, y: 13},
+		width:	8,
+		height:	6
 	});
 
-	testRectangle.subtract(testCircle);
+	var testCircle = new Circle({
+		origin:	{x: 36, y: 16},
+		radius:	4
+	});
 
-	testGrid.toNodes(testPolarArray.points, function(node) {
+	testRectangle.subtract(testRectangle2);
+	testRectangle.selectEdges({greedy: true});
+
+	testCircle.selectEdges({greedy: true}).selectRandom({density: 80});
+
+	testGrid.toNodes(testRectangle, function(node) {
+		node.color = 'red';
+	});
+
+	testGrid.toNodes(testCircle, function(node) {
+		node.color = 'red';
+	});
+
+	testRectangle.selectAll().selectInsides({greedy: true}).selectRandom({number: 2});
+
+	testGrid.toNodes(testRectangle, function(node) {
 		node.color = 'red';
 	});
 

@@ -92,10 +92,12 @@ define(['constants', 'cell', 'compass'], function(constants, Cell, Compass) {
 	/**
 	 * Passes each node at a Shape object's coordinates to a callback function.
 	 *
-	 * @param		{array}		coords		Array of point objects
+	 * @param		{object}		shape		Shape object
 	 * @param		{function}	callback		Callback function
 	 */
-	Grid.prototype.toNodes = function(coords, callback) {
+	Grid.prototype.toNodes = function(shape, callback) {
+		var coords = shape.selection || [];
+
 		for(var i in coords) {
 			var coord	= coords[i];
 			var node	= this.getNode(coord.x, coord.y);

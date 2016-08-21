@@ -9,5 +9,7 @@ define(['shape', 'rectangle', 'circle', 'spiral'], function(Shape, Rectangle, Ci
 
 	}
 
+	// TODO: finish this
+
 	return LinearArray;
 });

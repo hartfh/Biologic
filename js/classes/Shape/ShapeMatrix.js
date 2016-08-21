@@ -71,16 +71,19 @@ define(function() {
 	/**
 	 * Separates points into edge and inside.
 	 *
+	 * @param		{boolean}	greedy
 	 * @return	{array}	edgePoints
 	 */
-	ShapeMatrix.prototype.separateTypes = function() {
+	ShapeMatrix.prototype.separateTypes = function(greedy) {
 		var self			= this;
+		var greedy		= greedy || false;
 		var edgePoints		= [];
 		var insidePoints	= [];
 
 		this.eachPoint(function(point, x, y) {
 			if( point ) {
 				var neighbors = 0;
+				var neighborCap = 4;
 
 				if( self.getPoint(x, y + 1) ) {
 					neighbors++;
@@ -94,8 +97,24 @@ define(function() {
 				if( self.getPoint(x - 1, y) ) {
 					neighbors++;
 				}
+				if( greedy ) {
+					if( self.getPoint(x + 1, y + 1) ) {
+						neighbors++;
+					}
+					if( self.getPoint(x + 1, y - 1) ) {
+						neighbors++;
+					}
+					if( self.getPoint(x - 1, y - 1) ) {
+						neighbors++;
+					}
+					if( self.getPoint(x - 1, y + 1) ) {
+						neighbors++;
+					}
 
-				if( neighbors < 4 ) {
+					neighborCap = 8;
+				}
+
+				if( neighbors < neighborCap ) {
 					edgePoints.push({x: x, y: y});
 				} else {
 					insidePoints.push({x: x, y: y});

@@ -17,20 +17,25 @@ define(['shape-matrix'], function(ShapeMatrix) {
 			substantiate = true;
 		}
 
-		self.points = [];
+		self.points	= [];
+		self.selection	= [];
 
 		self.generatePoints(config);
-		self.elimDuplicates();
+		self.eliminateDuplicates();
 
 		if( substantiate ) {
 			self.substantiate();
 		}
 
-		//self.pushToOrigin();
+		self.selectAll();
 
-		self.separateTypes();
-		self.randomize(density);
+		//self.pushToOrigin();
 	}
+
+	/**
+	 * Abstract method which adds points to this shape.
+	 */
+	Shape.prototype.generatePoints = function(config) {}
 
 	/**
 	 * Loads a point into a shape.
@@ -41,10 +46,106 @@ define(['shape-matrix'], function(ShapeMatrix) {
 		this.points.push({x: point.x, y: point.y});
 	}
 
+	Shape.prototype.selectAll = function() {
+		this.selection = this.points;
+
+		return this;
+	}
+
 	/**
-	 * Abstract method which adds points to this shape.
+	 * Reduces a shape's selected points to just those lying on the edge.
+	 *
+	 * @param		{object}	config				Configuration object
+	 * @param		{boolean}	config.substantiate		Whether or not to temporarily set all points to positive for use in a ShapeMatrix.
+	 * @param		{boolean}	config.greedy			Whether or not to include diagonal points when determining edges
+	 * @return	{object}	this
 	 */
-	Shape.prototype.generatePoints = function(config) {}
+	Shape.prototype.selectEdges = function(config) {
+		var config		= config || {};
+		var greedy		= config.greedy || false;
+		var substantiate	= config.substantiate || false;
+		var types			= this.separateTypes({
+			greedy:		greedy,
+			substantiate:	substantiate
+		});
+
+		this.selection = types.edge;
+
+		return this;
+	}
+
+	/**
+	 * Reduces a shape's selected points to just those lying on the interior.
+	 *
+	 * @param		{object}	config				Configuration object
+	 * @param		{boolean}	config.substantiate		Whether or not to temporarily set all points to positive for use in a ShapeMatrix.
+	 * @param		{boolean}	config.greedy			Whether or not to include diagonal points when determining edges
+	 * @return	{object}	this
+	 */
+	Shape.prototype.selectInsides = function(config) {
+		var config		= config || {};
+		var greedy		= config.greedy || false;
+		var substantiate	= config.substantiate || false;
+		var types			= this.separateTypes({
+			greedy:		greedy,
+			substantiate:	substantiate
+		});
+
+		this.selection = types.inside;
+
+		return this;
+	}
+
+	/**
+	 * Reduces a shape's selected points to a randomly chosen subset.
+	 *
+	 * @param		{object}	config			Configuration object
+	 * @param		{float}	config.density		A float ranging from 0 - 100 that expresses the percentage of a shape's points that should remain
+	 * @param		{integer}	config.number		Number of points to randomly select
+	 * @return	{object}	this
+	 */
+	Shape.prototype.selectRandom = function(config) {
+		var percentToKeep	= config.density / 100;
+		var numberToGet	= config.number || false;
+		var randomPoints	= [];
+
+		if( percentToKeep < 1 ) {
+			this.eachSelected(function(point) {
+				if( Math.random() < percentToKeep ) {
+					randomPoints.push(point);
+				}
+			});
+		}
+
+		if( numberToGet ) {
+			if( numberToGet > this.selection.length ) {
+				numberToGet = this.selection.length;
+			}
+
+			for(var n = 0; n < numberToGet; n++) {
+				var randIndex = Math.floor( Math.random() * this.selection.length );
+
+				randomPoints.push( this.selection[randIndex] );
+
+				this.selection.splice(randIndex, 1);
+			}
+		}
+
+		this.selection = randomPoints;
+
+		return this;
+	}
+
+	/**
+	 * Reduces a shape's points to just those in the "selection" property.
+	 *
+	 * @return	{object}	this
+	 */
+	Shape.prototype.saveSelection = function() {
+		this.points = this.selection;
+
+		return this;
+	}
 
 	/**
 	 * Passes each point as well as its index to a callback function. Will exit the loop if the callback function returns true.
@@ -61,14 +162,38 @@ define(['shape-matrix'], function(ShapeMatrix) {
 		}
 	}
 
-	Shape.prototype.join = function(shape) {
+	/**
+	 * Passes each selected point as well as its index to a callback function. Will exit the loop if the callback function returns true.
+	 *
+	 * @param		{function}	callback
+	 */
+	Shape.prototype.eachSelected = function(callback) {
+		for(var index in this.selection) {
+			var point	= this.selection[index];
 
-
-		// finish by running eliminateDuplicates().
+			if( callback(point, index) ) {
+				break;
+			}
+		}
 	}
 
 	/**
-	 * Remove matching points in the provided shape from this shape's points.
+	 * Combine the points in one shape with another.
+	 *
+	 * @param		{object}	shape 	A Shape Object
+	 */
+	Shape.prototype.join = function(shape) {
+		var self = this;
+
+		shape.eachPoint(function(point) {
+			self.addPoint(point);
+		});
+
+		this.eliminateDuplicates();
+	}
+
+	/**
+	 * Remove the points in one shape from another.
 	 *
 	 * @param		{object}	shape	A Shape object
 	 */
@@ -76,7 +201,7 @@ define(['shape-matrix'], function(ShapeMatrix) {
 		// Rather than splicing out point indices from this.points, simply track the points to keep in a new array
 		var newPoints = [];
 
-		this.eachPoint(function(point, index) {
+		this.eachPoint(function(point) {
 			var keep = true;
 
 			shape.eachPoint(function(subtractPoint, subtractIndex) {
@@ -98,7 +223,7 @@ define(['shape-matrix'], function(ShapeMatrix) {
 	/**
 	 * Removes any duplicate points from the shape.
 	 */
-	Shape.prototype.elimDuplicates = function() {
+	Shape.prototype.eliminateDuplicates = function() {
 		var uniquePoints = [];
 
 		this.eachPoint(function(point, index) {
@@ -124,9 +249,15 @@ define(['shape-matrix'], function(ShapeMatrix) {
 	/**
 	 * Separate shape's points into "inside" and "edge" points.
 	 *
-	 * @param		{boolean}		substantiate	Whether or not to temporarily set all points to positive for use in a ShapeMatrix.
+	 * @param		{object}	config				Configuration object
+	 * @param		{boolean}	config.substantiate		Whether or not to temporarily set all points to positive for use in a ShapeMatrix.
+	 * @param		{boolean}	config.greedy			Whether or not to include diagonal points when determining edges
 	 */
-	Shape.prototype.separateTypes = function(substantiate) {
+	Shape.prototype.separateTypes = function(config) {
+		var config		= config || {};
+		var substantiate	= config.substantiate || false;
+		var greedy		= config.greedy || false;
+
 		var extremes	= this.findExtremes();
 		var width		= extremes.highest.x + 1;
 		var height	= extremes.highest.y + 1;
@@ -143,35 +274,14 @@ define(['shape-matrix'], function(ShapeMatrix) {
 
 		matrix.loadPoints(this);
 
-		var types = matrix.separateTypes();
-
-		this.edge		= types.edge;
-		this.inside	= types.inside;
+		var types = matrix.separateTypes(greedy);
 
 		// Unsubstantiate the shape
 		if( substantiate ) {
 			this.translate(extremes.lowest.x, extremes.lowest.y);
 		}
-	}
 
-	/**
-	 * Reduces a shape's points to a randomly chosen subset.
-	 *
-	 * @param		{float}	density	A float ranging from 0 - 100 that expresses the percentage of a shape's points that should remain
-	 */
-	Shape.prototype.randomize = function(density) {
-		var percentToKeep	= density / 100;
-		var randomPoints	= [];
-
-		if( percentToKeep < 1 ) {
-			this.eachPoint(function(point) {
-				if( Math.random() < percentToKeep ) {
-					randomPoints.push(point);
-				}
-			});
-
-			this.points = randomPoints;
-		}
+		return types;
 	}
 
 	/**
