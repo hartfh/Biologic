@@ -10,7 +10,9 @@ define(['constants', 'cell', 'compass'], function(constants, Cell, Compass) {
 		this.width	= config.width || 0;
 		this.height	= config.height || 0;
 		this.name		= config.name;
-		this.nodes	= [];
+		this.nodes	= [];	// All nodes
+		this.active	= [];	// Active nodes
+		this.modified	= [];	// Nodes modified this cycle
 		this.ctx;
 
 		for(var j = 0; j < this.width; j++) {
@@ -25,7 +27,7 @@ define(['constants', 'cell', 'compass'], function(constants, Cell, Compass) {
 
 		for(var j = 0; j < this.width; j++) {
 			for(var i = 0; i < this.height; i++) {
-				this.addNode(i, j);
+				this.addNode(j, i);
 			}
 		}
 
@@ -35,20 +37,61 @@ define(['constants', 'cell', 'compass'], function(constants, Cell, Compass) {
 	}
 
 	Grid.prototype.cycle = function() {
-		// this.activeCells = [];
-		// keep "alive" cells in an array (initially load them somehow).
-		// each cycle we create a new array and load newly alive cells into it? old array gets oerwritten
-		// don't track immortal/inert cells
+		var self = this;
+		var nodesToKeepActive = [];
 
+		this.eachActiveNode(function(node) {
+			node.cycle();
 
-		var modifiedCells = [];
+			if( node.isAlive() ) {
+				nodesToKeepActive.push(node);
+			}
 
-		// add modified cells into array
+			self.addModifiedNode(node);
 
-		// revert each cell in modified array to unmodified
+			var newNodes = node.getSpawn();
 
-		// redraw only the old and newly modified cells
-		// add in a drawNode() method?
+			for(var i in newNodes) {
+				var newNode = newNodes[i];
+
+				self.addModifiedNode(newNode);
+
+				nodesToKeepActive.push(newNode);
+			}
+		});
+
+		this.eachModifiedNode(function(node) {
+			self.drawNode(node);
+			node.setModified(false);
+		});
+
+		this.modified	= [];
+		this.active	= nodesToKeepActive;
+		//console.log(this.active);
+	}
+
+	Grid.prototype.addActiveNode = function(node) {
+		this.active.push(node);
+	}
+
+	Grid.prototype.addModifiedNode = function(node) {
+		this.modified.push(node);
+	}
+
+	Grid.prototype.eachModifiedNode = function(callback) {
+		for(var i in this.modified) {
+			var node = this.modified[i];
+
+			callback(node);
+		}
+	}
+
+	Grid.prototype.eachActiveNode = function(callback) {
+		for(var i in this.active) {
+			var node = this.active[i];
+
+			callback(node);
+		}
 	}
 
 	/**
@@ -68,26 +111,22 @@ define(['constants', 'cell', 'compass'], function(constants, Cell, Compass) {
 		this.clear();
 
 		var self		= this;
-		var nodeWidth	= constants.nodeWidth;
 
-		this.eachNode(function(node, x, y) {
-			var nodeStartX = x * nodeWidth;
-			var nodeStartY = y * nodeWidth;
-
-			var swatch = 'rgba(135, 135, 200, 1)';
-
-			/*
-			var color = node.getContent('color');
-			*/
-			if( node.color == 'red' ) {
-				swatch = 'rgba(109, 0, 9, 1)';
-			}
-
-			self.ctx.fillStyle = swatch;
-			self.ctx.fillRect(nodeStartX, nodeStartY, nodeWidth, nodeWidth);
+		this.eachNode(function(node) {
+			self.drawNode(node);
 		});
 	}
 
+	Grid.prototype.drawNode = function(node) {
+		var nodeWidth	= constants.nodeWidth;
+		var coords	= node.getCoordinates();
+		var nodeStartX = coords.x * nodeWidth;
+		var nodeStartY	= coords.y * nodeWidth;
+		var color		= node.getColor();
+
+		this.ctx.fillStyle = color;
+		this.ctx.fillRect(nodeStartX, nodeStartY, nodeWidth, nodeWidth);
+	}
 
 	/**
 	 * Passes each node at a Shape object's coordinates to a callback function.
@@ -154,6 +193,8 @@ define(['constants', 'cell', 'compass'], function(constants, Cell, Compass) {
 		var west	= this.getNode(x - 1, y);
 
 		var args = {
+			x:		x,
+			y:		y,
 			north:	north,
 			south:	south,
 			east:	east,
@@ -163,7 +204,7 @@ define(['constants', 'cell', 'compass'], function(constants, Cell, Compass) {
 
 		var node = new Cell(args);
 
-		this.nodes[y][x] = node;
+		this.nodes[x][y] = node;
 
 		// Get adjacent nodes and link them to the new one
 		if( north ) { north.addLink('south', node); }
@@ -204,7 +245,7 @@ define(['constants', 'cell', 'compass'], function(constants, Cell, Compass) {
 				}
 
 				// Destroy this node
-				this.nodes[y][x] = false;
+				this.nodes[x][y] = false;
 			}
 		}
 	}

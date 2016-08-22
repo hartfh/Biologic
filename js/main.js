@@ -38,9 +38,6 @@ require.config({
 // Create an "engine" class(?). Instantiates a Grid, creates shapes, loads them. Cycles Grid every 1-2 seconds.
 // Find some way to combine engine with advanced shapes
 
-// Remove separateTypes() from shape creation. Change Grid.toNodes() to accept just a Shape object.
-// Possibly change getEdges/Insides to calculate points.
-
 require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'spiral', 'ordered-field', 'polar-array', 'rectangular-array', 'linear-array', 'blob'], function(utilities, Grid, Blank, Line, Rectangle, Circle, Spiral, OrderedField, PolarArray, RectangularArray, LinearArray, Blob) {
 	//var testLayer = new Layer({name: 'primary-layer'});
 
@@ -178,17 +175,22 @@ require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'spiral', 
 	testCircle.selectEdges({greedy: true}).selectRandom({density: 80});
 
 	testGrid.toNodes(testRectangle, function(node) {
-		node.color = 'red';
+		node.setStage('alive');
+		node.setInert(true);
+		node.setImmortal(true);
 	});
 
 	testGrid.toNodes(testCircle, function(node) {
-		node.color = 'red';
+		node.setStage('alive');
+		node.setInert(true);
+		node.setImmortal(true);
 	});
 
-	testRectangle.selectAll().selectInsides({greedy: true}).selectRandom({number: 2});
+	testRectangle.selectAll().selectInsides({greedy: true}).selectRandom({number: 1});
 
 	testGrid.toNodes(testRectangle, function(node) {
-		node.color = 'red';
+		node.setStage('alive');
+		testGrid.active.push(node);
 	});
 
 	/*
@@ -202,4 +204,17 @@ require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'spiral', 
 	//console.log(testPolarArray);
 
 	testGrid.draw();
+
+	for(var i = 0; i < 2; i++) {
+		testGrid.cycle();
+	}
+
+
+	var startSequence = function() {
+		setInterval(function() {
+			console.log('tic')
+			testGrid.cycle();
+		}, 1000);
+	}
+	//startSequence();
 });

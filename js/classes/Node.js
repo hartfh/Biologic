@@ -3,6 +3,8 @@ define(['compass'], function(Compass) {
 	 * Represents points on a grid within a Grid object. Acts as a node in a graph (4-way linked list).
 	 *
 	 * @param		{object}	config		Configuration object
+	 * @param		{integer}	config.x		X-coordinate on the Grid
+	 * @param		{integer}	config.y		Y-coordinate on the Grid
 	 * @param		{object}	config.north	A node object to link in the "north" position
 	 * @param		{object}	config.south	A node object to link in the "south" position
 	 * @param		{object}	config.east	A node object to link in the "east" position
@@ -21,10 +23,28 @@ define(['compass'], function(Compass) {
 	 * @param		{object}	config	Configuration object
 	 */
 	Node.prototype.init = function(self, config) {
+		self.x		= config.x || false;
+		self.y		= config.y || false;
 		self.north	= config.north || false;
 		self.south	= config.south || false;
 		self.east		= config.east || false;
 		self.west		= config.west || false;
+	}
+
+	/**
+	 * An abstract function that gets the node's color so it can be drawn to a canvas.
+	 *
+	 * @param		{string}	color	An rgba color value
+	 */
+	Node.prototype.getColor = function() {}
+
+	/**
+	 * Get this node's coordinates as a point object.
+	 *
+	 * @return	{object}
+	 */
+	Node.prototype.getCoordinates = function() {
+		return {x: this.x, y: this.y};
 	}
 
 	/**
