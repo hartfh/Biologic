@@ -190,8 +190,17 @@ require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'spiral', 
 		testGrid.active.push(node);
 	});
 
+	console.log(testRectangle.selection)
+
 	// Get one neighbor to the above selected node
-	//testRectangle.saveSelection().selectNeighbors().selectRandom({number: 1});
+	testRectangle.selectNeighbors().selectRandom({number: 1});
+
+	console.log(testRectangle.selection)
+
+	testGrid.toNodes(testRectangle, function(node) {
+		node.setStage('dying');
+		testGrid.active.push(node);
+	});
 
 	/*
 	console.log(testLine);

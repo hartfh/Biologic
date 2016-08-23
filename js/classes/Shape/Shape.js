@@ -137,7 +137,32 @@ define(['shape-matrix'], function(ShapeMatrix) {
 	}
 
 	Shape.prototype.selectNeighbors = function() {
-		// get 4 or 8 surrounding nodes
+		var possibles		= [];
+		var newSelection	= [];
+
+		if( this.selection.length == 1 ) {
+			var point = this.selection[0];
+
+			possibles.push({x: point.x + 1, y: point.y});
+			possibles.push({x: point.x - 1, y: point.y});
+			possibles.push({x: point.x, y: point.y + 1});
+			possibles.push({x: point.x, y: point.y - 1});
+
+			for(var i in possibles) {
+				var possible = possibles[i];
+
+				this.eachPoint(function(point) {
+					if( possible.x == point.x && possible.y == point.y ) {
+						newSelection.push(point);
+						return true;
+					}
+				});
+			}
+		}
+
+		this.selection = newSelection;
+
+		return this;
 	}
 
 	/**
