@@ -136,6 +136,10 @@ define(['shape-matrix'], function(ShapeMatrix) {
 		return this;
 	}
 
+	Shape.prototype.selectNeighbors = function() {
+		// get 4 or 8 surrounding nodes
+	}
+
 	/**
 	 * Reduces a shape's points to just those in the "selection" property.
 	 *

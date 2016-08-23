@@ -1,4 +1,4 @@
-define(['constants', 'cell', 'compass'], function(constants, Cell, Compass) {
+define(['constants', 'signal', 'compass'], function(constants, Signal, Compass) {
 	/**
 	 * Represents a 2-dimensional grid of points using a graph data structure.
 	 *
@@ -19,7 +19,7 @@ define(['constants', 'cell', 'compass'], function(constants, Cell, Compass) {
 			var column = [];
 
 			for(var i = 0; i < this.height; i++) {
-				column.push( new Cell() );
+				column.push( new Signal() );
 			}
 
 			this.nodes.push(column);
@@ -67,7 +67,6 @@ define(['constants', 'cell', 'compass'], function(constants, Cell, Compass) {
 
 		this.modified	= [];
 		this.active	= nodesToKeepActive;
-		//console.log(this.active);
 	}
 
 	Grid.prototype.addActiveNode = function(node) {
@@ -202,7 +201,7 @@ define(['constants', 'cell', 'compass'], function(constants, Cell, Compass) {
 		};
 
 
-		var node = new Cell(args);
+		var node = new Signal(args);
 
 		this.nodes[x][y] = node;
 

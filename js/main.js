@@ -5,7 +5,7 @@ require.config({
 		'constants':			'constants',
 		'grid':				'classes/Grid',
 		'node':				'classes/Node',
-		'cell':				'classes/Cell',
+		'signal':				'classes/Signal',
 		'compass':			'classes/Compass',
 		'shape':				'classes/Shape/Shape',
 		'shape-matrix':		'classes/Shape/ShapeMatrix',
@@ -31,9 +31,6 @@ require.config({
 // Create various types of Cell behavior. (e.g. generator, alive with lifespan, inert)
 // Setup some premade shape arrangements that specify starting stats for some of the cells.
 // 	-Might want a new class that combines shape creation with modifications to cells. e.g. Pattern or Template
-// Shape for creating rings/donuts with a "hole" in them. Or possibly just create a subtract() method. Also join().
-//	-Create a ring with 1px inside region. Allow a single cell to loop around in it.
-//	-Can create wires/circuits for cells.
 
 // Create an "engine" class(?). Instantiates a Grid, creates shapes, loads them. Cycles Grid every 1-2 seconds.
 // Find some way to combine engine with advanced shapes
@@ -193,6 +190,9 @@ require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'spiral', 
 		testGrid.active.push(node);
 	});
 
+	// Get one neighbor to the above selected node
+	//testRectangle.saveSelection().selectNeighbors().selectRandom({number: 1});
+
 	/*
 	console.log(testLine);
 	console.log(testRectangle);
@@ -205,16 +205,17 @@ require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'spiral', 
 
 	testGrid.draw();
 
-	for(var i = 0; i < 2; i++) {
+	/*
+	for(var i = 0; i < 4; i++) {
 		testGrid.cycle();
 	}
+	*/
 
 
 	var startSequence = function() {
 		setInterval(function() {
-			console.log('tic')
 			testGrid.cycle();
-		}, 1000);
+		}, 100);
 	}
-	//startSequence();
+	startSequence();
 });
