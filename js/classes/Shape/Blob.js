@@ -14,7 +14,9 @@ define(['shape', 'circle'], function(Shape, Circle) {
 		// Recursively gather points. Get the points of a circle, then create recursive circles centered along random points of that circle.
 		(function(origin, radius) {
 			var mainCircle		= new Circle({origin: origin, radius: radius});
-			var mainRandPoints	= new Circle({origin: origin, radius: radius, type: 'edge', density: 14});
+			var mainRandPoints	= new Circle({origin: origin, radius: radius});
+
+			mainRandPoints.selectEdge().selectRandom({density: 14});
 
 			allCircles.push(mainCircle);
 
@@ -24,8 +26,8 @@ define(['shape', 'circle'], function(Shape, Circle) {
 				return;
 			}
 
-			for(var i in mainRandPoints.points) {
-				var randPoint = mainRandPoints.points[i];
+			for(var i in mainRandPoints.selected) {
+				var randPoint = mainRandPoints.selected[i];
 
 				arguments.callee(randPoint, newRadius);
 			}

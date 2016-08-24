@@ -139,7 +139,9 @@ define(['compass'], function(Compass) {
 			var node	= this.getLink(state.direction);
 
 			if( node ) {
-				callback(node);
+				if( callback(node) ) {
+					break;
+				}
 			}
 
 			compass.rotate();

@@ -18,7 +18,7 @@ define(['shape-matrix'], function(ShapeMatrix) {
 		}
 
 		self.points	= [];
-		self.selection	= [];
+		self.selected	= [];
 
 		self.generatePoints(config);
 		self.eliminateDuplicates();
@@ -47,7 +47,7 @@ define(['shape-matrix'], function(ShapeMatrix) {
 	}
 
 	Shape.prototype.selectAll = function() {
-		this.selection = this.points;
+		this.selected = this.points;
 
 		return this;
 	}
@@ -60,7 +60,7 @@ define(['shape-matrix'], function(ShapeMatrix) {
 	 * @param		{boolean}	config.greedy			Whether or not to include diagonal points when determining edges
 	 * @return	{object}	this
 	 */
-	Shape.prototype.selectEdges = function(config) {
+	Shape.prototype.selectEdge = function(config) {
 		var config		= config || {};
 		var greedy		= config.greedy || false;
 		var substantiate	= config.substantiate || false;
@@ -69,7 +69,7 @@ define(['shape-matrix'], function(ShapeMatrix) {
 			substantiate:	substantiate
 		});
 
-		this.selection = types.edge;
+		this.selected = types.edge;
 
 		return this;
 	}
@@ -82,7 +82,7 @@ define(['shape-matrix'], function(ShapeMatrix) {
 	 * @param		{boolean}	config.greedy			Whether or not to include diagonal points when determining edges
 	 * @return	{object}	this
 	 */
-	Shape.prototype.selectInsides = function(config) {
+	Shape.prototype.selectInside = function(config) {
 		var config		= config || {};
 		var greedy		= config.greedy || false;
 		var substantiate	= config.substantiate || false;
@@ -91,7 +91,7 @@ define(['shape-matrix'], function(ShapeMatrix) {
 			substantiate:	substantiate
 		});
 
-		this.selection = types.inside;
+		this.selected = types.inside;
 
 		return this;
 	}
@@ -118,60 +118,31 @@ define(['shape-matrix'], function(ShapeMatrix) {
 		}
 
 		if( numberToGet ) {
-			if( numberToGet > this.selection.length ) {
-				numberToGet = this.selection.length;
+			if( numberToGet > this.selected.length ) {
+				numberToGet = this.selected.length;
 			}
 
 			for(var n = 0; n < numberToGet; n++) {
-				var randIndex = Math.floor( Math.random() * this.selection.length );
+				var randIndex = Math.floor( Math.random() * this.selected.length );
 
-				randomPoints.push( this.selection[randIndex] );
+				randomPoints.push( this.selected[randIndex] );
 
-				this.selection.splice(randIndex, 1);
+				this.selected.splice(randIndex, 1);
 			}
 		}
 
-		this.selection = randomPoints;
-
-		return this;
-	}
-
-	Shape.prototype.selectNeighbors = function() {
-		var possibles		= [];
-		var newSelection	= [];
-
-		if( this.selection.length == 1 ) {
-			var point = this.selection[0];
-
-			possibles.push({x: point.x + 1, y: point.y});
-			possibles.push({x: point.x - 1, y: point.y});
-			possibles.push({x: point.x, y: point.y + 1});
-			possibles.push({x: point.x, y: point.y - 1});
-
-			for(var i in possibles) {
-				var possible = possibles[i];
-
-				this.eachPoint(function(point) {
-					if( possible.x == point.x && possible.y == point.y ) {
-						newSelection.push(point);
-						return true;
-					}
-				});
-			}
-		}
-
-		this.selection = newSelection;
+		this.selected = randomPoints;
 
 		return this;
 	}
 
 	/**
-	 * Reduces a shape's points to just those in the "selection" property.
+	 * Reduces a shape's points to just those in the "selected" property.
 	 *
 	 * @return	{object}	this
 	 */
-	Shape.prototype.saveSelection = function() {
-		this.points = this.selection;
+	Shape.prototype.saveSelected = function() {
+		this.points = this.selected;
 
 		return this;
 	}
@@ -197,8 +168,8 @@ define(['shape-matrix'], function(ShapeMatrix) {
 	 * @param		{function}	callback
 	 */
 	Shape.prototype.eachSelected = function(callback) {
-		for(var index in this.selection) {
-			var point	= this.selection[index];
+		for(var index in this.selected) {
+			var point	= this.selected[index];
 
 			if( callback(point, index) ) {
 				break;
@@ -211,7 +182,7 @@ define(['shape-matrix'], function(ShapeMatrix) {
 	 *
 	 * @param		{object}	shape 	A Shape Object
 	 */
-	Shape.prototype.join = function(shape) {
+	Shape.prototype.add = function(shape) {
 		var self = this;
 
 		shape.eachPoint(function(point) {
@@ -219,6 +190,8 @@ define(['shape-matrix'], function(ShapeMatrix) {
 		});
 
 		this.eliminateDuplicates();
+
+		return this;
 	}
 
 	/**
@@ -247,6 +220,26 @@ define(['shape-matrix'], function(ShapeMatrix) {
 		});
 
 		this.points = newPoints;
+
+		return this;
+	}
+
+	Shape.prototype.grow = function() {
+		var self = this;
+
+		this.selectEdge();
+
+		this.eachPoint(function(point, index) {
+			self.addPoint({x: point.x + 1, y: point.y});
+			self.addPoint({x: point.x - 1, y: point.y});
+			self.addPoint({x: point.x, y: point.y + 1});
+			self.addPoint({x: point.x, y: point.y - 1});
+		});
+
+		this.selectAll();
+		this.eliminateDuplicates();
+
+		return this;
 	}
 
 	/**

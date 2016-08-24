@@ -13,6 +13,7 @@ require.config({
 		'line':				'classes/Shape/Line',
 		'rectangle':			'classes/Shape/Rectangle',
 		'circle':				'classes/Shape/Circle',
+		'tube':				'classes/Shape/Tube',
 		'spiral':				'classes/Shape/Spiral',
 		'ordered-field':		'classes/Shape/OrderedField',
 		'polar-array':			'classes/Shape/PolarArray',
@@ -32,47 +33,16 @@ require.config({
 // Setup some premade shape arrangements that specify starting stats for some of the cells.
 // 	-Might want a new class that combines shape creation with modifications to cells. e.g. Pattern or Template
 
-// Create an "engine" class(?). Instantiates a Grid, creates shapes, loads them. Cycles Grid every 1-2 seconds.
-// Find some way to combine engine with advanced shapes
+// Add "satellite" option to Blob (define number, defaults to zero)
+// Other blob ideas: after making Branches, combine branches with blob to make "arms".
+// Possibly even connect to other blobs, creating a branching network
+// Do similar as above with rectangles and branches using straight lines
 
-require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'spiral', 'ordered-field', 'polar-array', 'rectangular-array', 'linear-array', 'blob'], function(utilities, Grid, Blank, Line, Rectangle, Circle, Spiral, OrderedField, PolarArray, RectangularArray, LinearArray, Blob) {
-	//var testLayer = new Layer({name: 'primary-layer'});
+require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'tube', 'spiral', 'ordered-field', 'polar-array', 'rectangular-array', 'linear-array', 'blob'], function(utilities, Grid, Blank, Line, Rectangle, Circle, Tube, Spiral, OrderedField, PolarArray, RectangularArray, LinearArray, Blob) {
+
+	var testGrid = new Grid({width: 59, height: 50, name: 'grid-1'});
 
 	/*
-	var testLine = new Line({
-		origin:		{x: 0, y: 0},
-		terminus:		{x: 2, y: 2}
-	});
-
-	var testLine2 = new Line({
-		origin:		{x: 3, y: 3},
-		terminus:		{x: 6, y: 6}
-	});
-
-	var testRectangle = new Rectangle({
-		origin:	{x: 10, y: 10},
-		width:	5,
-		height:	9
-	});
-
-	var testCircle = new Circle({
-		//origin:		{x: 8, y: 8},
-		radius:		8,
-		type:		'edge',
-		density:		50
-	});
-
-	var testSpiral = new Spiral({
-		origin:		{x: 8, y: 8},
-		limit:		14
-	});
-
-	var testOrderedField = new OrderedField({
-		origin:		{x: 0, y: 0},
-		terminus:		{x: 5, y: 5},
-		spacing:		2
-	});
-
 	var testBlob = new Blob({
 		origin:	{x: 15, y: 15},
 		radius:	6
@@ -80,41 +50,19 @@ require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'spiral', 
 	*/
 
 	/*
-	var testCircle = new Circle({
-		origin:		{x: 0, y: 0},
-		radius:		10,
-		//density:		80,
-		substantiate:	false
-	});
-	*/
-
-	//testCircle.rotate(90);
-
 	var testPolarArray = new PolarArray({
 		origin:	{x: 15, y: 15},
 		radius:	7,
 		number:	4,
 		adjust:	{x: 0, y: 0},
 		shape:	{
-			/*
-			type:	'spiral',
-			config:	{
-				limit:	11
-			}
-			*/
 			type:	'circle',
 			config:	{
 				radius:		5
 			}
-			/*
-			type:	'rectangle',
-			config:	{
-				width:	9,
-				height:	7
-			}
-			*/
 		}
 	});
+	*/
 
 	/*
 	var testRectangularArray = new RectangularArray({
@@ -128,27 +76,28 @@ require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'spiral', 
 				width:	4,
 				height:	5
 			}
-			type:	'circle',
-			config:	{
-				radius:	5
-			}
-			type:	'spiral',
-			config:	{
-				limit:	11
-			}
 		}
 	});
 	*/
 
-	var testGrid = new Grid({width: 59, height: 30, name: 'grid-1'});
+	var testBlob = new Blob({
+		origin:	{x: 25, y: 17},
+		radius:	5
+	});
+	for(var i = 0; i < 2; i++) {
+		testBlob.grow();
+	}
 
+
+	testBlob.selectEdge({greedy: true});
+
+	testGrid.toNodes(testBlob, function(node) {
+		node.setStage('alive').setInert(true).setImmortal(true);
+	});
+
+	testGrid.draw();
 
 	/*
-	testGrid.toNodes(testBlob, function(node) {
-		node.color = 'red';
-	});
-	*/
-
 	var testRectangle = new Rectangle({
 		origin:	{x: 10, y: 10},
 		width:	14,
@@ -161,65 +110,53 @@ require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'spiral', 
 		height:	6
 	});
 
+	var testRectangle3 = new Rectangle({
+		origin:	{x: 16, y: 20},
+		width:	3,
+		height:	8,
+	});
+
 	var testCircle = new Circle({
 		origin:	{x: 36, y: 16},
 		radius:	4
 	});
 
-	testRectangle.subtract(testRectangle2);
-	testRectangle.selectEdges({greedy: true});
+	testRectangle
+		.subtract(testRectangle2)
+		.add(testRectangle3)
+		.selectEdge({greedy: true});
 
-	testCircle.selectEdges({greedy: true}).selectRandom({density: 80});
+	testCircle
+		.selectEdge({greedy: true})
+		.selectRandom({density: 80});
 
 	testGrid.toNodes(testRectangle, function(node) {
-		node.setStage('alive');
-		node.setInert(true);
-		node.setImmortal(true);
+		node
+			.setStage('alive')
+			.setInert(true)
+			.setImmortal(true);
 	});
 
 	testGrid.toNodes(testCircle, function(node) {
-		node.setStage('alive');
-		node.setInert(true);
-		node.setImmortal(true);
+		node
+			.setStage('alive')
+			.setInert(true)
+			.setImmortal(true);
 	});
 
-	testRectangle.selectAll().selectInsides({greedy: true}).selectRandom({number: 1});
+	testRectangle
+		.selectAll()
+		.selectInside({greedy: true})
+		.selectRandom({number: 1});
 
 	testGrid.toNodes(testRectangle, function(node) {
-		node.setStage('alive');
+		node.setStage('starter');
 		testGrid.active.push(node);
 	});
-
-	console.log(testRectangle.selection)
-
-	// Get one neighbor to the above selected node
-	testRectangle.selectNeighbors().selectRandom({number: 1});
-
-	console.log(testRectangle.selection)
-
-	testGrid.toNodes(testRectangle, function(node) {
-		node.setStage('dying');
-		testGrid.active.push(node);
-	});
-
-	/*
-	console.log(testLine);
-	console.log(testRectangle);
-	console.log(testCircle);
-	console.log(testSpiral);
-	console.log(testOrderedField);
-	*/
-	//console.log(testBlob);
-	//console.log(testPolarArray);
 
 	testGrid.draw();
 
-	/*
-	for(var i = 0; i < 4; i++) {
-		testGrid.cycle();
-	}
-	*/
-
+	//for(var i = 0; i < 1; i++) { testGrid.cycle(); }
 
 	var startSequence = function() {
 		setInterval(function() {
@@ -227,4 +164,5 @@ require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'spiral', 
 		}, 100);
 	}
 	startSequence();
+	*/
 });

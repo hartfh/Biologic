@@ -14,7 +14,7 @@ define(['node'], function(Node) {
 		this.modified	= false;	// tracks changes to this Signal during a cycle. reverts to false at end of cycle
 		this.stage	= 'dead';	// which stage of its lifecycle this Signal is in
 		this.spawn	= [];
-		this.lifecycle = ['alive', 'dying', 'dead'];
+		this.lifecycle = ['starter', 'alive', 'dying', 'dead'];
 	}
 
 	/**
@@ -26,6 +26,9 @@ define(['node'], function(Node) {
 		var color = '';
 
 		switch( this.stage ) {
+			case 'starter':
+				color = 'rgba(205, 255, 200, 1)';
+				break;
 			case 'alive':
 				color = 'rgba(255, 200, 200, 1)';
 				break;
@@ -47,30 +50,40 @@ define(['node'], function(Node) {
 		if( typeof(value) == 'boolean' ) {
 			this.generator = value;
 		}
+
+		return this;
 	}
 
 	Signal.prototype.setImmortal = function(value) {
 		if( typeof(value) == 'boolean' ) {
 			this.immortal = value;
 		}
+
+		return this;
 	}
 
 	Signal.prototype.setInert = function(value) {
 		if( typeof(value) == 'boolean' ) {
 			this.inert = value;
 		}
+
+		return this;
 	}
 
 	Signal.prototype.setModified = function(value) {
 		if( typeof(value) == 'boolean' ) {
 			this.modified = value;
 		}
+
+		return this;
 	}
 
 	Signal.prototype.setStage = function(stage) {
 		if( this.lifecycle.indexOf(stage) != -1 ) {
 			this.stage = stage;
 		}
+
+		return this;
 	}
 
 	Signal.prototype.cycle = function() {
@@ -89,6 +102,10 @@ define(['node'], function(Node) {
 					if( !node.isAlive() ) {
 						node.animate();
 						self.addSpawn(node);
+
+						if( self.stage == 'starter' ) {
+							return true;
+						}
 					} else {
 						node.age();
 					}
@@ -112,7 +129,7 @@ define(['node'], function(Node) {
 	}
 
 	Signal.prototype.isAlive = function() {
-		if( this.stage == 'alive' || this.stage == 'dying' ) {
+		if( this.stage == 'starter' || this.stage == 'alive' || this.stage == 'dying' ) {
 			return true;
 		}
 
@@ -120,7 +137,7 @@ define(['node'], function(Node) {
 	}
 
 	Signal.prototype.isHealthy = function() {
-		if( this.stage == 'alive' ) {
+		if( this.stage == 'starter' || this.stage == 'alive' ) {
 			return true;
 		}
 
@@ -134,6 +151,9 @@ define(['node'], function(Node) {
 	Signal.prototype.age = function() {
 		if( !this.modified ) {
 			switch( this.stage ) {
+				case 'starter':
+					this.stage = 'dying';
+					break;
 				case 'alive':
 					if( !this.immortal ) {
 						this.stage = 'dying';

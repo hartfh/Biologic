@@ -134,7 +134,7 @@ define(['constants', 'signal', 'compass'], function(constants, Signal, Compass) 
 	 * @param		{function}	callback		Callback function
 	 */
 	Grid.prototype.toNodes = function(shape, callback) {
-		var coords = shape.selection || [];
+		var coords = shape.selected || [];
 
 		for(var i in coords) {
 			var coord	= coords[i];
