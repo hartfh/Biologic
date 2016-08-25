@@ -7,33 +7,38 @@ define(['constants', 'signal', 'compass'], function(constants, Signal, Compass) 
 	 * @param		{integer}		config.height		Height of the grid
 	 */
 	var Grid = function(config) {
-		this.width	= config.width || 0;
-		this.height	= config.height || 0;
-		this.name		= config.name;
-		this.nodes	= [];	// All nodes
-		this.active	= [];	// Active nodes
-		this.modified	= [];	// Nodes modified this cycle
-		this.ctx;
+		var config = config || {};
+		this.init(this, config);
+	}
 
-		for(var j = 0; j < this.width; j++) {
+	Grid.prototype.init = function(self, config) {
+		self.width	= config.width || 0;
+		self.height	= config.height || 0;
+		self.name		= config.name;
+		self.nodes	= [];	// All nodes
+		self.active	= [];	// Active nodes
+		self.modified	= [];	// Nodes modified this cycle
+		self.ctx;
+
+		for(var j = 0; j < self.width; j++) {
 			var column = [];
 
-			for(var i = 0; i < this.height; i++) {
+			for(var i = 0; i < self.height; i++) {
 				column.push( new Signal() );
 			}
 
-			this.nodes.push(column);
+			self.nodes.push(column);
 		}
 
-		for(var j = 0; j < this.width; j++) {
-			for(var i = 0; i < this.height; i++) {
-				this.addNode(j, i);
+		for(var j = 0; j < self.width; j++) {
+			for(var i = 0; i < self.height; i++) {
+				self.addNode(j, i);
 			}
 		}
 
 		constants.$app.append('<canvas id="' + config.name + '" width="1200" height="900" />');
 		var elem	= document.getElementById(config.name);
-		this.ctx	= elem.getContext('2d');
+		self.ctx	= elem.getContext('2d');
 	}
 
 	Grid.prototype.cycle = function() {

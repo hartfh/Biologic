@@ -4,7 +4,9 @@ require.config({
 		'utilities':			'utilities',
 		'constants':			'constants',
 		'grid':				'classes/Grid',
+		'tessellated-grid':		'classes/TessellatedGrid',
 		'node':				'classes/Node',
+		'tessellated-node':		'classes/TessellatedNode',
 		'signal':				'classes/Signal',
 		'compass':			'classes/Compass',
 		'shape':				'classes/Shape/Shape',
@@ -39,9 +41,9 @@ require.config({
 // Possibly even connect to other blobs, creating a branching network
 // Do similar as above with rectangles and branches using straight lines
 
-require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'tube', 'spiral', 'ordered-field', 'polar-array', 'rectangular-array', 'linear-array', 'blob', 'irregular-line'], function(utilities, Grid, Blank, Line, Rectangle, Circle, Tube, Spiral, OrderedField, PolarArray, RectangularArray, LinearArray, Blob, IrregularLine) {
+require(['utilities', 'grid', 'tessellated-grid', 'blank', 'line', 'rectangle', 'circle', 'tube', 'spiral', 'ordered-field', 'polar-array', 'rectangular-array', 'linear-array', 'blob', 'irregular-line'], function(utilities, Grid, TessellatedGrid, Blank, Line, Rectangle, Circle, Tube, Spiral, OrderedField, PolarArray, RectangularArray, LinearArray, Blob, IrregularLine) {
 
-	var testGrid = new Grid({width: 59, height: 50, name: 'grid-1'});
+	var testGrid = new TessellatedGrid({width: 59, height: 50, name: 'grid-1'});
 
 	/*
 	var testBlob = new Blob({
@@ -111,7 +113,7 @@ require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'tube', 's
 	});
 	*/
 
-	testGrid.draw();
+	//testGrid.draw();
 
 	/*
 	var testRectangle = new Rectangle({
