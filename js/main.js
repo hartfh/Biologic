@@ -19,7 +19,8 @@ require.config({
 		'polar-array':			'classes/Shape/PolarArray',
 		'rectangular-array':	'classes/Shape/RectangularArray',
 		'linear-array':		'classes/Shape/LinearArray',
-		'blob':				'classes/Shape/Blob'
+		'blob':				'classes/Shape/Blob',
+		'irregular-line':		'classes/Shape/IrregularLine'
 	}
 });
 
@@ -38,7 +39,7 @@ require.config({
 // Possibly even connect to other blobs, creating a branching network
 // Do similar as above with rectangles and branches using straight lines
 
-require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'tube', 'spiral', 'ordered-field', 'polar-array', 'rectangular-array', 'linear-array', 'blob'], function(utilities, Grid, Blank, Line, Rectangle, Circle, Tube, Spiral, OrderedField, PolarArray, RectangularArray, LinearArray, Blob) {
+require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'tube', 'spiral', 'ordered-field', 'polar-array', 'rectangular-array', 'linear-array', 'blob', 'irregular-line'], function(utilities, Grid, Blank, Line, Rectangle, Circle, Tube, Spiral, OrderedField, PolarArray, RectangularArray, LinearArray, Blob, IrregularLine) {
 
 	var testGrid = new Grid({width: 59, height: 50, name: 'grid-1'});
 
@@ -80,20 +81,35 @@ require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'tube', 's
 	});
 	*/
 
+	var lineTest = new IrregularLine({
+		origin:	{x: 5, y: 5},
+		terminus:	{x: 37, y: 27}
+	});
+
+	//lineTest.grow().grow().selectEdge();
+
+	testGrid.toNodes(lineTest, function(node) {
+		node.setStage('alive').setInert(true).setImmortal(true);
+	});
+
+	/*
 	var testBlob = new Blob({
 		origin:	{x: 25, y: 17},
 		radius:	5
 	});
-	for(var i = 0; i < 2; i++) {
-		testBlob.grow();
-	}
 
-
-	testBlob.selectEdge({greedy: true});
+	testBlob.selectEdge({greedy: true}).saveSelected().grow().grow().grow().selectEdge();
 
 	testGrid.toNodes(testBlob, function(node) {
 		node.setStage('alive').setInert(true).setImmortal(true);
 	});
+
+	testBlob.selectInside();
+
+	testGrid.toNodes(testBlob, function(node) {
+		node.setStage('dying').setInert(true).setImmortal(true);
+	});
+	*/
 
 	testGrid.draw();
 

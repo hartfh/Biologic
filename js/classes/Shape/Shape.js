@@ -399,6 +399,9 @@ define(['shape-matrix'], function(ShapeMatrix) {
 		});
 
 		this.points = newPoints;
+		this.selected = newPoints;
+
+		return this;
 
 		//this.translate(centerX, centerY);
 		//this.substantiate();
