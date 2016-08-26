@@ -43,7 +43,7 @@ require.config({
 
 require(['utilities', 'grid', 'tessellated-grid', 'blank', 'line', 'rectangle', 'circle', 'tube', 'spiral', 'ordered-field', 'polar-array', 'rectangular-array', 'linear-array', 'blob', 'irregular-line'], function(utilities, Grid, TessellatedGrid, Blank, Line, Rectangle, Circle, Tube, Spiral, OrderedField, PolarArray, RectangularArray, LinearArray, Blob, IrregularLine) {
 
-	var testGrid = new Grid({width: 200, height: 130, name: 'grid-1'});
+	var testGrid = new Grid({width: 200, height: 140, name: 'grid-1'});
 
 	/*
 	var testPolarArray = new PolarArray({
@@ -76,6 +76,7 @@ require(['utilities', 'grid', 'tessellated-grid', 'blank', 'line', 'rectangle', 
 	});
 	*/
 
+	/*
 	var lineTest = new IrregularLine({
 		origin:	{x: 5, y: 5},
 		terminus:	{x: 37, y: 27}
@@ -86,10 +87,11 @@ require(['utilities', 'grid', 'tessellated-grid', 'blank', 'line', 'rectangle', 
 	testGrid.toNodes(lineTest, function(node) {
 		node.setStage('alive').setInert(true).setImmortal(true);
 	});
+	*/
 
 	var testBlob = new Blob({
 		origin:	{x: 85, y: 67},
-		radius:	9
+		radius:	10
 	});
 
 	//testBlob.selectEdge({greedy: true}).saveSelected().grow().grow().grow().selectEdge();
