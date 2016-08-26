@@ -8,21 +8,37 @@ define(['shape', 'circle'], function(Shape, Circle) {
 	Blob.prototype.generatePoints = function(config) {
 		var allCircles = []; // stores every circle created. Points are to be combined at the end. Then eliminate duplicates(?)
 
-		var origin = config.origin || {x: 6, y: 6};
-		var radius = config.radius || 3;
+		var origin	= config.origin || {x: 6, y: 6};
+		var radius	= config.radius || 3;
+		//var density	= 10;
 
 		// Recursively gather points. Get the points of a circle, then create recursive circles centered along random points of that circle.
 		(function(origin, radius) {
 			var mainCircle		= new Circle({origin: origin, radius: radius});
 			var mainRandPoints	= new Circle({origin: origin, radius: radius});
 
-			mainRandPoints.selectEdge().selectRandom({density: 14});
+			var num = 3;
+			var rand = Math.random();
+
+			if( rand > 0.15 ) {
+				num = 2;
+
+				if( rand > 0.85 ) {
+					num = 1;
+				}
+			}
+			mainRandPoints.selectEdge().selectRandom({number: num});
 
 			allCircles.push(mainCircle);
 
-			var newRadius = radius - 1;
+			var newRadius = radius;
 
-			if( newRadius == 1 ) {
+			if( Math.random() > 0.07 ) {
+				newRadius--;
+			}
+			//console.log(newRadius)
+
+			if( newRadius <= 1 ) {
 				return;
 			}
 

@@ -43,14 +43,7 @@ require.config({
 
 require(['utilities', 'grid', 'tessellated-grid', 'blank', 'line', 'rectangle', 'circle', 'tube', 'spiral', 'ordered-field', 'polar-array', 'rectangular-array', 'linear-array', 'blob', 'irregular-line'], function(utilities, Grid, TessellatedGrid, Blank, Line, Rectangle, Circle, Tube, Spiral, OrderedField, PolarArray, RectangularArray, LinearArray, Blob, IrregularLine) {
 
-	var testGrid = new TessellatedGrid({width: 59, height: 50, name: 'grid-1'});
-
-	/*
-	var testBlob = new Blob({
-		origin:	{x: 15, y: 15},
-		radius:	6
-	});
-	*/
+	var testGrid = new Grid({width: 200, height: 130, name: 'grid-1'});
 
 	/*
 	var testPolarArray = new PolarArray({
@@ -94,18 +87,19 @@ require(['utilities', 'grid', 'tessellated-grid', 'blank', 'line', 'rectangle', 
 		node.setStage('alive').setInert(true).setImmortal(true);
 	});
 
-	/*
 	var testBlob = new Blob({
-		origin:	{x: 25, y: 17},
-		radius:	5
+		origin:	{x: 85, y: 67},
+		radius:	9
 	});
 
-	testBlob.selectEdge({greedy: true}).saveSelected().grow().grow().grow().selectEdge();
+	//testBlob.selectEdge({greedy: true}).saveSelected().grow().grow().grow().selectEdge();
+	testBlob.selectEdge({greedy: true});
 
 	testGrid.toNodes(testBlob, function(node) {
 		node.setStage('alive').setInert(true).setImmortal(true);
 	});
 
+	/*
 	testBlob.selectInside();
 
 	testGrid.toNodes(testBlob, function(node) {
@@ -113,7 +107,7 @@ require(['utilities', 'grid', 'tessellated-grid', 'blank', 'line', 'rectangle', 
 	});
 	*/
 
-	//testGrid.draw();
+	testGrid.draw();
 
 	/*
 	var testRectangle = new Rectangle({
