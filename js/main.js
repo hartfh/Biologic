@@ -91,7 +91,7 @@ require(['utilities', 'grid', 'tessellated-grid', 'blank', 'line', 'rectangle', 
 
 	var testBlob = new Blob({
 		origin:	{x: 85, y: 67},
-		radius:	10
+		radius:	7
 	});
 
 	//testBlob.selectEdge({greedy: true}).saveSelected().grow().grow().grow().selectEdge();

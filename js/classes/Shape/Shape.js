@@ -350,6 +350,10 @@ define(['shape-matrix'], function(ShapeMatrix) {
 		}
 	}
 
+	Shape.prototype.scale = function() {
+		
+	}
+
 	/**
 	 * Shifts all points by two integer amounts.
 	 *

@@ -9,10 +9,44 @@ define(['shape', 'blank', 'circle'], function(Shape, Blank, Circle) {
 		var allCircles = []; // stores every circle created. Points are to be combined at the end.
 		var origin	= config.origin || {x: 10, y: 10};
 		var radius	= config.radius || 3;
+		var origRadius = config.radius || 3;
 
+		var starter	= new Blank();
+		var resets	= 0;
+
+		/*
+		keep radius at about 7.
+		if radius is more or less, find percent offset and scale by that amount at end
+		*/
+
+		while( radius > 1 ) {
+			var addon = new Circle({
+				origin:	origin,
+				radius:	Math.floor(radius)
+			});
+
+			starter.add(addon).selectEdge().selectRandom({number: 1});
+
+			origin = starter.selected[0];
+
+			// Medium chance to decrement radius
+			if( Math.random() > 0.2 ) {
+				radius = radius * 0.94;
+			}
+
+			// Tiny chance to increment radius
+			if( resets < 3 ) {
+				if( Math.random() > 0.9 ) {
+					radius = origRadius;
+					resets++;
+				}
+			}
+		}
+
+		this.points = starter.points;
+
+		/*
 		var number	= 2;
-
-		// TODO: values need to be percentages based off of original radius
 		var shape = function(origin, radius) {
 			var newRadius = radius;
 
@@ -54,6 +88,7 @@ define(['shape', 'blank', 'circle'], function(Shape, Blank, Circle) {
 		}(origin, radius);
 
 		this.points = shape.points;
+		*/
 
 		/*
 		var starter	= new Circle({
