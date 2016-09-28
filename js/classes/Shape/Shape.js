@@ -350,8 +350,33 @@ define(['shape-matrix'], function(ShapeMatrix) {
 		}
 	}
 
-	Shape.prototype.scale = function() {
-		
+	/**
+	 *
+	 *
+	 * @param		{float}	factor	Amount to scale by. A value of 1.0 represents keeping the shape at 100% of its starting size.
+	 */
+	Shape.prototype.scale = function(factor) {
+		var scaledPoints = [];
+
+		if( typeof(factor) != 'number' ) {
+			return;
+		}
+
+		this.eachPoint(function(point) {
+			for(var y = 1; y < factor; y++) {
+				for(var x = 1; x < factor; x++) {
+					var scaledPoint = {x: point.x * x, y: point.y * y};
+					console.log(scaledPoint);
+					scaledPoints.push(scaledPoint);
+				}
+			}
+		});
+
+		this.points = scaledPoints;
+
+		this.eliminateDuplicates();
+
+		return this;
 	}
 
 	/**

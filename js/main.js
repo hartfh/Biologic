@@ -4,9 +4,7 @@ require.config({
 		'utilities':			'utilities',
 		'constants':			'constants',
 		'grid':				'classes/Grid',
-		'tessellated-grid':		'classes/TessellatedGrid',
 		'node':				'classes/Node',
-		'tessellated-node':		'classes/TessellatedNode',
 		'signal':				'classes/Signal',
 		'compass':			'classes/Compass',
 		'shape':				'classes/Shape/Shape',
@@ -22,7 +20,8 @@ require.config({
 		'rectangular-array':	'classes/Shape/RectangularArray',
 		'linear-array':		'classes/Shape/LinearArray',
 		'blob':				'classes/Shape/Blob',
-		'irregular-line':		'classes/Shape/IrregularLine'
+		'irregular-line':		'classes/Shape/IrregularLine',
+		'branch':				'classes/Shape/Branch'
 	}
 });
 
@@ -41,7 +40,7 @@ require.config({
 // Possibly even connect to other blobs, creating a branching network
 // Do similar as above with rectangles and branches using straight lines
 
-require(['utilities', 'grid', 'tessellated-grid', 'blank', 'line', 'rectangle', 'circle', 'tube', 'spiral', 'ordered-field', 'polar-array', 'rectangular-array', 'linear-array', 'blob', 'irregular-line'], function(utilities, Grid, TessellatedGrid, Blank, Line, Rectangle, Circle, Tube, Spiral, OrderedField, PolarArray, RectangularArray, LinearArray, Blob, IrregularLine) {
+require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'tube', 'spiral', 'ordered-field', 'polar-array', 'rectangular-array', 'linear-array', 'blob', 'irregular-line', 'branch'], function(utilities, Grid, Blank, Line, Rectangle, Circle, Tube, Spiral, OrderedField, PolarArray, RectangularArray, LinearArray, Blob, IrregularLine, Branch) {
 
 	var testGrid = new Grid({width: 200, height: 140, name: 'grid-1'});
 
@@ -89,6 +88,19 @@ require(['utilities', 'grid', 'tessellated-grid', 'blank', 'line', 'rectangle', 
 	});
 	*/
 
+	var recTest = new Rectangle({
+		origin:	{x: 1, y: 1},
+		width:	6,
+		height:	6
+	});
+
+	recTest.scale(3).selectEdge();
+
+	testGrid.toNodes(recTest, function(node) {
+		node.setStage('alive').setInert(true).setImmortal(true);
+	});
+
+	/*
 	var testBlob = new Blob({
 		origin:	{x: 85, y: 67},
 		radius:	7
@@ -100,6 +112,7 @@ require(['utilities', 'grid', 'tessellated-grid', 'blank', 'line', 'rectangle', 
 	testGrid.toNodes(testBlob, function(node) {
 		node.setStage('alive').setInert(true).setImmortal(true);
 	});
+	*/
 
 	/*
 	testBlob.selectInside();
