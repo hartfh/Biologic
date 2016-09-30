@@ -6,6 +6,7 @@ define(['shape', 'blank', 'line', 'rectangle'], function(Shape, Blank, Line, Rec
 	Branch.extend(Shape);
 
 	Branch.prototype.generatePoints = function(config) {
+		/*
 		function sortLowestToHighest(a, b) {
 			var a = a.x + a.y;
 			var b = b.x + b.y;
@@ -47,15 +48,6 @@ define(['shape', 'blank', 'line', 'rectangle'], function(Shape, Blank, Line, Rec
 
 			randomPoints[i].x += xAdjust * randXDir;
 			randomPoints[i].y += yAdjust * randYDir;
-
-			/*
-			if( randomPoints[i].x > terminus.x ) {
-				randomPoints[i].x = terminus.x;
-			}
-			if( randomPoints[i].y > terminus.y ) {
-				randomPoints[i].y = terminus.y;
-			}
-			*/
 		}
 
 		randomPoints.sort(sortLowestToHighest)
@@ -78,6 +70,7 @@ define(['shape', 'blank', 'line', 'rectangle'], function(Shape, Blank, Line, Rec
 
 		this.points = starter.points;
 		this.eliminateDuplicates();
+		*/
 	}
 
 	return Branch;

@@ -351,9 +351,9 @@ define(['shape-matrix'], function(ShapeMatrix) {
 	}
 
 	/**
+	 * Scales a shape by an integer amount.
 	 *
-	 *
-	 * @param		{float}	factor	Amount to scale by. A value of 1.0 represents keeping the shape at 100% of its starting size.
+	 * @param		{integer}	factor	Amount to scale by. A value of 1 represents keeping the shape at 100% of its starting size.
 	 */
 	Shape.prototype.scale = function(factor) {
 		var scaledPoints = [];
@@ -362,11 +362,14 @@ define(['shape-matrix'], function(ShapeMatrix) {
 			return;
 		}
 
+		factor = Math.floor(factor);
+
 		this.eachPoint(function(point) {
-			for(var y = 1; y < factor; y++) {
-				for(var x = 1; x < factor; x++) {
-					var scaledPoint = {x: point.x * x, y: point.y * y};
-					console.log(scaledPoint);
+			var basePoint = {x: point.x * factor, y: point.y * factor};
+
+			for(var y = 0; y < factor; y++) {
+				for(var x = 0; x < factor; x++) {
+					var scaledPoint = {x: basePoint.x + x, y: basePoint.y + y};
 					scaledPoints.push(scaledPoint);
 				}
 			}

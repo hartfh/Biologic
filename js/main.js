@@ -88,15 +88,14 @@ require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'tube', 's
 	});
 	*/
 
-	var recTest = new Rectangle({
-		origin:	{x: 1, y: 1},
-		width:	6,
-		height:	6
+	var testShape = new Line({
+		origin:	{x: 5, y: 5},
+		terminus:	{x: 27, y: 17}
 	});
 
-	recTest.scale(3).selectEdge();
+	testShape.scale(3).grow().grow().selectEdge();
 
-	testGrid.toNodes(recTest, function(node) {
+	testGrid.toNodes(testShape, function(node) {
 		node.setStage('alive').setInert(true).setImmortal(true);
 	});
 
