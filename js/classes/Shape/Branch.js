@@ -1,4 +1,4 @@
-define(['shape', 'blank', 'line', 'rectangle'], function(Shape, Blank, Line, Rectangle) {
+define(['compass', 'shape', 'blank', 'line', 'rectangle'], function(Compass, Shape, Blank, Line, Rectangle) {
 	var Branch = function(config) {
 		this.parent.init(this, config);
 	};
@@ -6,79 +6,69 @@ define(['shape', 'blank', 'line', 'rectangle'], function(Shape, Blank, Line, Rec
 	Branch.extend(Shape);
 
 	Branch.prototype.generatePoints = function(config) {
-		const LENGTH = 4;
+		// Configuration
+		const LENGTH		= 6;
+		var direction		= config.direction || 'south';
+		var start			= config.start || {x: 0, y: 0};
+		var points		= [];
+		var compass		= new Compass();
 
-		// determine direction (in config)
-		// move in a single x or y direction. adjust points along the opposite direction
-		// e.g. move along X, nudge along Y
-		// traverse N nodes before stopping (length variable)
-		// this doesn't allow for diagonal line segments
+		// Behavior
+		var chanceRecurse		= 0.97;
+		var chanceDeflect		= 0.3;
+		var adjChanceDeflect	= chanceDeflect;
+		var absolute			= 1;
 
-		/*
-		function sortLowestToHighest(a, b) {
-			var a = a.x + a.y;
-			var b = b.x + b.y;
+		compass.setState(config.direction);
 
-			if( a > b ) {
-				return 1;
-			} else if( a < b ) {
-				return -1;
-			} else {
-				return 0;
+		var adjustment		= compass.getState().coordinates;
+		var perpendicular	= compass.rotate().getState().coordinates;
+		var offset		= {x: perpendicular.x, y: perpendicular.y};
+
+		// Create the shape's points
+		(function() {
+			for(var i = 0; i < (LENGTH - 1); i++) {
+				var point = {x: start.x, y: start.y};
+
+				point.x += adjustment.x * i;
+				point.y += adjustment.y * i;
+
+				if( i != 0 ) {
+					if( Math.random() < adjChanceDeflect ) {
+						adjChanceDeflect	= adjChanceDeflect * 0.55;
+						absolute			= (Math.random() > 0.5) ? 1 : -1;
+
+						if( offset.x != 0 ) {
+							offset.x += perpendicular.x * absolute;
+						}
+						if( offset.y != 0 ) {
+							offset.y += perpendicular.y * absolute;
+						}
+					}
+				}
+
+				point.x += offset.x;
+				point.y += offset.y;
+
+				points.push(point);
 			}
-		}
 
-		var origin	= config.origin;
-		var terminus	= config.terminus;
-		var width		= Math.abs(terminus.x - origin.x);
-		var height	= Math.abs(terminus.y - origin.y);
-		var starter	= new Blank();
-		//var adjuster	= (width > height) ? width : height;
-		var scale		= 6;
+			// Chance to recurse
+			if( Math.random() < chanceRecurse ) {
+				chanceRecurse = chanceRecurse * 0.95;
 
-		var line = new Line({
-			origin:		origin,
-			terminus:		terminus
-		});
+				// Reset accumulated values
+				offset			= {x: perpendicular.x * absolute, y: perpendicular.y * absolute};
+				adjChanceDeflect	= chanceDeflect;
 
-		line.selectRandom({number: 7}).saveSelected();
+				// Set the next start point
+				start	= {x: point.x + adjustment.x, y: point.y + adjustment.y};
 
-		var randomPoints = line.selected;
-
-		for(var i in randomPoints) {
-			var point	= randomPoints[i];
-
-			var xAdjust = Math.floor( Math.random() * height / scale );
-			var yAdjust = Math.floor( Math.random() * width / scale );
-
-			var randXDir = ( Math.random() > 0.5 ) ? -1 : 1;
-			var randYDir = ( Math.random() > 0.5 ) ? -1 : 1;
-
-			randomPoints[i].x += xAdjust * randXDir;
-			randomPoints[i].y += yAdjust * randYDir;
-		}
-
-		randomPoints.sort(sortLowestToHighest)
-
-		randomPoints = [origin, ...randomPoints, terminus];
-
-		for(var i in randomPoints) {
-			if( i != 0 ) {
-				var pointOne	= randomPoints[i - 1];
-				var pointTwo	= randomPoints[i];
-
-				var line = new Line({
-					origin:	pointOne,
-					terminus:	pointTwo
-				});
-
-				starter.add(line);
+				arguments.callee();
 			}
-		}
+		})();
 
-		this.points = starter.points;
-		this.eliminateDuplicates();
-		*/
+		this.points = points;
 	}
 
 	return Branch;

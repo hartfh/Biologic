@@ -87,14 +87,13 @@ require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'tube', 's
 		node.setStage('alive').setInert(true).setImmortal(true);
 	});
 	*/
-	var branchTest = new Branch({});
 
-	var testShape = new Line({
-		origin:	{x: 5, y: 5},
-		terminus:	{x: 27, y: 17}
+	var testShape = new Branch({
+		start:		{x: 40, y: 10},
+		direction:	'south'
 	});
 
-	testShape.scale(3).grow().grow().selectEdge();
+	console.log(testShape);
 
 	testGrid.toNodes(testShape, function(node) {
 		node.setStage('alive').setInert(true).setImmortal(true);
