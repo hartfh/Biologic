@@ -6,6 +6,14 @@ define(['shape', 'blank', 'line', 'rectangle'], function(Shape, Blank, Line, Rec
 	Branch.extend(Shape);
 
 	Branch.prototype.generatePoints = function(config) {
+		const LENGTH = 4;
+
+		// determine direction (in config)
+		// move in a single x or y direction. adjust points along the opposite direction
+		// e.g. move along X, nudge along Y
+		// traverse N nodes before stopping (length variable)
+		// this doesn't allow for diagonal line segments
+
 		/*
 		function sortLowestToHighest(a, b) {
 			var a = a.x + a.y;

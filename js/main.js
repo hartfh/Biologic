@@ -87,6 +87,7 @@ require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'tube', 's
 		node.setStage('alive').setInert(true).setImmortal(true);
 	});
 	*/
+	var branchTest = new Branch({});
 
 	var testShape = new Line({
 		origin:	{x: 5, y: 5},
