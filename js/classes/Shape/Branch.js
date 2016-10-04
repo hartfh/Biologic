@@ -7,17 +7,19 @@ define(['compass', 'shape', 'blank', 'line', 'rectangle'], function(Compass, Sha
 
 	Branch.prototype.generatePoints = function(config) {
 		// Configuration
-		const LENGTH		= 6;
+		const LENGTH		= 5;
 		var direction		= config.direction || 'south';
 		var start			= config.start || {x: 0, y: 0};
 		var points		= [];
 		var compass		= new Compass();
 
 		// Behavior
+		var age				= 1;
 		var chanceRecurse		= 0.97;
 		var chanceDeflect		= 0.3;
 		var adjChanceDeflect	= chanceDeflect;
 		var absolute			= 1;
+		//var depth;
 
 		compass.setState(config.direction);
 
@@ -53,7 +55,17 @@ define(['compass', 'shape', 'blank', 'line', 'rectangle'], function(Compass, Sha
 				points.push(point);
 			}
 
-			// Chance to recurse
+			// Child branches
+			if( age % 6 == 0 ) {
+				var subBranch = new Branch({
+					start:		{x: point.x, y: point.y},
+					direction:	direction
+				});
+
+				points = [...points, ...subBranch.points];
+			}
+
+			// Recursion
 			if( Math.random() < chanceRecurse ) {
 				chanceRecurse = chanceRecurse * 0.95;
 
@@ -64,11 +76,15 @@ define(['compass', 'shape', 'blank', 'line', 'rectangle'], function(Compass, Sha
 				// Set the next start point
 				start	= {x: point.x + adjustment.x, y: point.y + adjustment.y};
 
+				age++;
+
 				arguments.callee();
 			}
 		})();
 
 		this.points = points;
+
+		this.eliminateDuplicates();
 	}
 
 	return Branch;
