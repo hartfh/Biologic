@@ -40,6 +40,12 @@ require.config({
 // Possibly even connect to other blobs, creating a branching network
 // Do similar as above with rectangles and branches using straight lines
 
+// Other classes:
+// Character class, Something else to track pixels and tiles (Map class?)
+// Ability to load map data initially and on the fly
+// Pixel grid with larger tile grid (way to reconcile the two)
+// Include object tracking but possibly export object details into its own module?
+
 require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'tube', 'spiral', 'ordered-field', 'polar-array', 'rectangular-array', 'linear-array', 'blob', 'irregular-line', 'branch'], function(utilities, Grid, Blank, Line, Rectangle, Circle, Tube, Spiral, OrderedField, PolarArray, RectangularArray, LinearArray, Blob, IrregularLine, Branch) {
 
 	var testGrid = new Grid({width: 200, height: 140, name: 'grid-1'});
