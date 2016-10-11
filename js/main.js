@@ -7,6 +7,7 @@ require.config({
 		'node':				'classes/Node',
 		'signal':				'classes/Signal',
 		'compass':			'classes/Compass',
+		'asset-tracker':		'classes/AssetTracker',
 		'shape':				'classes/Shape/Shape',
 		'shape-matrix':		'classes/Shape/ShapeMatrix',
 		'blank':				'classes/Shape/Blank',
@@ -46,9 +47,17 @@ require.config({
 // Pixel grid with larger tile grid (way to reconcile the two)
 // Include object tracking but possibly export object details into its own module?
 
-require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'tube', 'spiral', 'ordered-field', 'polar-array', 'rectangular-array', 'linear-array', 'blob', 'irregular-line', 'branch'], function(utilities, Grid, Blank, Line, Rectangle, Circle, Tube, Spiral, OrderedField, PolarArray, RectangularArray, LinearArray, Blob, IrregularLine, Branch) {
+require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'tube', 'spiral', 'ordered-field', 'polar-array', 'rectangular-array', 'linear-array', 'blob', 'irregular-line', 'branch', 'asset-tracker'], function(utilities, Grid, Blank, Line, Rectangle, Circle, Tube, Spiral, OrderedField, PolarArray, RectangularArray, LinearArray, Blob, IrregularLine, Branch, AssetTracker) {
 
 	var testGrid = new Grid({width: 200, height: 140, name: 'grid-1'});
+
+	var testAT = new AssetTracker();
+
+	var handle1 = testAT.load({'one': 11111});
+
+	console.log( testAT.get(handle1) );
+
+	console.log(testAT);
 
 	/*
 	var testPolarArray = new PolarArray({
