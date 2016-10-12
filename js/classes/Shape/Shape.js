@@ -141,7 +141,7 @@ define(['shape-matrix'], function(ShapeMatrix) {
 	 *
 	 * @return	{object}	this
 	 */
-	Shape.prototype.saveSelected = function() {
+	Shape.prototype.saveSelection = function() {
 		this.points = this.selected;
 
 		return this;

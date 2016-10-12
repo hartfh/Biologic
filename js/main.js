@@ -22,7 +22,8 @@ require.config({
 		'linear-array':		'classes/Shape/LinearArray',
 		'blob':				'classes/Shape/Blob',
 		'irregular-line':		'classes/Shape/IrregularLine',
-		'branch':				'classes/Shape/Branch'
+		'branch':				'classes/Shape/Branch',
+		'shape-field':			'classes/Shape/ShapeField'
 	}
 });
 
@@ -47,7 +48,7 @@ require.config({
 // Pixel grid with larger tile grid (way to reconcile the two)
 // Include object tracking but possibly export object details into its own module?
 
-require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'tube', 'spiral', 'ordered-field', 'polar-array', 'rectangular-array', 'linear-array', 'blob', 'irregular-line', 'branch', 'asset-tracker'], function(utilities, Grid, Blank, Line, Rectangle, Circle, Tube, Spiral, OrderedField, PolarArray, RectangularArray, LinearArray, Blob, IrregularLine, Branch, AssetTracker) {
+require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'tube', 'spiral', 'ordered-field', 'polar-array', 'rectangular-array', 'linear-array', 'blob', 'irregular-line', 'branch', 'shape-field', 'asset-tracker'], function(utilities, Grid, Blank, Line, Rectangle, Circle, Tube, Spiral, OrderedField, PolarArray, RectangularArray, LinearArray, Blob, IrregularLine, Branch, ShapeField, AssetTracker) {
 
 	var testGrid = new Grid({width: 200, height: 140, name: 'grid-1'});
 
@@ -55,9 +56,8 @@ require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'tube', 's
 
 	var handle1 = testAT.load({'one': 11111});
 
-	console.log( testAT.get(handle1) );
-
-	console.log(testAT);
+	//console.log( testAT.get(handle1) );
+	//console.log(testAT);
 
 	/*
 	var testPolarArray = new PolarArray({
@@ -103,12 +103,26 @@ require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'tube', 's
 	});
 	*/
 
+	/*
 	var testShape = new Branch({
 		start:		{x: 40, y: 10},
 		direction:	'south'
 	});
+	*/
 
-	console.log(testShape);
+	var testField = new ShapeField({
+
+	});
+
+	console.log(testField);
+
+	var testShape = new Rectangle({
+		origin:		{x: 5, y: 5},
+		width:		50,
+		height:		50
+	});
+
+	testShape.selectRandom({density: 50});
 
 	testGrid.toNodes(testShape, function(node) {
 		node.setStage('alive').setInert(true).setImmortal(true);
