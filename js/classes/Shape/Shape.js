@@ -350,6 +350,10 @@ define(['shape-matrix'], function(ShapeMatrix) {
 		}
 	}
 
+	Shape.prototype.applyFilter = function() {
+		// accept various strings to filter function effects
+	};
+
 	/**
 	 * Scales a shape by an integer amount.
 	 *

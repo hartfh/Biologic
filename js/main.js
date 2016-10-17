@@ -122,9 +122,26 @@ require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'tube', 's
 		height:		50
 	});
 
-	testShape.selectRandom({density: 50});
+	testShape.selectRandom({density: 45});
 
 	testGrid.toNodes(testShape, function(node) {
+		node.setStage('alive').setInert(true).setImmortal(true);
+	});
+
+	var testRect = new Rectangle({
+		origin:		{x: 80, y: 40},
+		width: 		50,
+		height:		50
+	});
+
+	var testBlob = new Blob({
+		origin:	{x: 105, y: 65},
+		radius:	4
+	});
+
+	testRect.subtract(testBlob).selectAll().saveSelection();
+
+	testGrid.toNodes(testRect, function(node) {
 		node.setStage('alive').setInert(true).setImmortal(true);
 	});
 
