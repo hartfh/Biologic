@@ -125,9 +125,14 @@ require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'tube', 's
 	testShape.selectRandom({density: 45});
 
 	testGrid.toNodes(testShape, function(node) {
+		testGrid.addActiveNode(node);
 		node.setStage('alive').setInert(true).setImmortal(true);
 	});
 
+	testGrid.applyFilter();
+
+	/*
+	// Rectangle with a blob cut out
 	var testRect = new Rectangle({
 		origin:		{x: 80, y: 40},
 		width: 		50,
@@ -144,6 +149,7 @@ require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'tube', 's
 	testGrid.toNodes(testRect, function(node) {
 		node.setStage('alive').setInert(true).setImmortal(true);
 	});
+	*/
 
 	/*
 	var testBlob = new Blob({

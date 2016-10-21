@@ -82,6 +82,25 @@ define(['constants', 'signal', 'compass'], function(constants, Signal, Compass) 
 		this.modified.push(node);
 	}
 
+	/**
+	 * Passes each node to a callback function.
+	 *
+	 * @param		{function}	callback	Callback function. Break the loop by returning true
+	 */
+	Grid.prototype.eachNode = function(callback) {
+		for(var x in this.nodes) {
+			var column = this.nodes[x];
+
+			for(var y in column) {
+				var node = column[y];
+
+				if( callback(node, x, y) ) {
+					break;
+				}
+			}
+		}
+	}
+
 	Grid.prototype.eachModifiedNode = function(callback) {
 		for(var i in this.modified) {
 			var node = this.modified[i];
@@ -254,23 +273,11 @@ define(['constants', 'signal', 'compass'], function(constants, Signal, Compass) 
 		}
 	}
 
-	/**
-	 * Passes each node to a callback function.
-	 *
-	 * @param		{function}	callback	Callback function. Break the loop by returning true
-	 */
-	Grid.prototype.eachNode = function(callback) {
-		for(var x in this.nodes) {
-			var column = this.nodes[x];
-
-			for(var y in column) {
-				var node = column[y];
-
-				if( callback(node, x, y) ) {
-					break;
-				}
-			}
-		}
+	Grid.prototype.applyFilter = function(filterName) {
+		this.eachActiveNode(function(node) {
+			console.log(node);
+			//node.eachLink
+		});
 	}
 
 	return Grid;
