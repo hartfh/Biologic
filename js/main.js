@@ -3,6 +3,7 @@ require.config({
 	paths: {
 		'utilities':			'utilities',
 		'constants':			'constants',
+		'matrix':				'classes/Matrix',
 		'grid':				'classes/Grid',
 		'node':				'classes/Node',
 		'signal':				'classes/Signal',
@@ -48,14 +49,69 @@ require.config({
 // Pixel grid with larger tile grid (way to reconcile the two)
 // Include object tracking but possibly export object details into its own module?
 
-require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'tube', 'spiral', 'ordered-field', 'polar-array', 'rectangular-array', 'linear-array', 'blob', 'irregular-line', 'branch', 'shape-field', 'asset-tracker'], function(utilities, Grid, Blank, Line, Rectangle, Circle, Tube, Spiral, OrderedField, PolarArray, RectangularArray, LinearArray, Blob, IrregularLine, Branch, ShapeField, AssetTracker) {
+require(['utilities', 'matrix', 'grid', 'blank', 'line', 'rectangle', 'circle', 'tube', 'spiral', 'ordered-field', 'polar-array', 'rectangular-array', 'linear-array', 'blob', 'irregular-line', 'branch', 'shape-field', 'asset-tracker'], function(utilities, Matrix, Grid, Blank, Line, Rectangle, Circle, Tube, Spiral, OrderedField, PolarArray, RectangularArray, LinearArray, Blob, IrregularLine, Branch, ShapeField, AssetTracker) {
 
-	var testGrid = new Grid({width: 200, height: 140, name: 'grid-1'});
+	var matrix = new Matrix({
+		width:	40,
+		height:	40
+	});
 
-	var testAT = new AssetTracker();
+	matrix.toEachCell(function(cell, x, y) {
+		return true;
+		/*
+		matrix.eachNeighbor(x, y, function(neighbor) {
+			console.log(neighbor);
+		});
+		*/
+	});
 
-	var handle1 = testAT.load({'one': 11111});
+	matrix.randomize(13);
 
+	console.log(matrix);
+
+	setInterval(function() {
+		matrix.applyLifeFilter();
+		tempDraw();
+	}, 85)
+
+
+	var tempDraw = function() {
+		// Temporary matrix drawing code:
+		jQuery('#app-container').append('<canvas id="matrix-layer" width="1200" height="900" />');
+		var elem	= document.getElementById('matrix-layer');
+		var ctx	= elem.getContext('2d');
+
+		var cellWidth	= 10;
+
+		matrix.forEachCell(function(cell, x, y) {
+			var color = 'rgba(70, 80, 70, 1)';
+
+			if( cell ) {
+				color = 'rgba(230, 90, 110, 1)';
+			}
+
+			ctx.fillStyle = color;
+			ctx.fillRect(cellWidth * x, cellWidth * y, cellWidth, cellWidth);
+		});
+	}
+
+	tempDraw();
+
+
+	/*
+	var nodeWidth	= constants.nodeWidth;
+	var coords	= node.getCoordinates();
+	var nodeStartX = coords.x * nodeWidth;
+	var nodeStartY	= coords.y * nodeWidth;
+	var color		= node.getColor();
+
+	this.ctx.fillStyle = color;
+	this.ctx.fillRect(nodeStartX, nodeStartY, nodeWidth, nodeWidth);
+	*/
+
+	//var testGrid = new Grid({width: 200, height: 140, name: 'grid-1'});
+	//var testAT = new AssetTracker();
+	//var handle1 = testAT.load({'one': 11111});
 	//console.log( testAT.get(handle1) );
 	//console.log(testAT);
 
@@ -110,26 +166,22 @@ require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'tube', 's
 	});
 	*/
 
-	var testField = new ShapeField({
-
-	});
-
-	console.log(testField);
-
+	/*
 	var testShape = new Rectangle({
 		origin:		{x: 5, y: 5},
-		width:		50,
-		height:		50
+		width:		40,
+		height:		40
 	});
 
-	testShape.selectRandom({density: 45});
+	testShape.selectRandom({density: 43});
 
 	testGrid.toNodes(testShape, function(node) {
 		testGrid.addActiveNode(node);
 		node.setStage('alive').setInert(true).setImmortal(true);
 	});
 
-	testGrid.applyFilter();
+	testGrid.draw();
+	*/
 
 	/*
 	// Rectangle with a blob cut out
@@ -172,8 +224,6 @@ require(['utilities', 'grid', 'blank', 'line', 'rectangle', 'circle', 'tube', 's
 		node.setStage('dying').setInert(true).setImmortal(true);
 	});
 	*/
-
-	testGrid.draw();
 
 	/*
 	var testRectangle = new Rectangle({

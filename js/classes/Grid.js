@@ -133,7 +133,7 @@ define(['constants', 'signal', 'compass'], function(constants, Signal, Compass) 
 	Grid.prototype.draw = function() {
 		this.clear();
 
-		var self		= this;
+		var self = this;
 
 		this.eachNode(function(node) {
 			self.drawNode(node);
@@ -274,9 +274,29 @@ define(['constants', 'signal', 'compass'], function(constants, Signal, Compass) 
 	}
 
 	Grid.prototype.applyFilter = function(filterName) {
-		this.eachActiveNode(function(node) {
-			console.log(node);
-			//node.eachLink
+		this.eachNode(function(node) {
+			var aliveNghbrs = 0;
+
+			node.eachLink(function(link) {
+				if( link.stage == 'alive' ) {
+					aliveNghbrs++;
+				}
+			});
+
+
+			/*
+			// Purge scattered
+			if( aliveNghbrs < 2 ) {
+				node.setStage('dead');
+			}
+			*/
+
+			/*
+			// Clear holes
+			if( aliveNghbrs == 4 ) {
+				node.setStage('alive');
+			}
+			*/
 		});
 	}
 
